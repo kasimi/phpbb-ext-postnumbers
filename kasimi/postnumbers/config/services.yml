@@ -1,0 +1,9 @@
+services:
+    kasimi.postnumbers.listener:
+        class: kasimi\postnumbers\event\listener
+        arguments:
+            - @user
+            - @config
+            - @dbal.conn
+        tags:
+            - { name: event.listener }
