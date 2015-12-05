@@ -152,8 +152,14 @@ class listener implements EventSubscriberInterface
 	 */
 	protected function inject_post_number($post_row, $post_num)
 	{
+		$bold_open = $bold_close = '';
+		if ($this->cfg('bold'))
+		{
+			$bold_open = '<strong>';
+			$bold_close = '</strong>';
+		}
 		$href = isset($post_row['U_MINI_POST']) ? $post_row['U_MINI_POST'] : '#pr' . $post_row['POST_ID'];
-		$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> #%d ', $post_row['MINI_POST_IMG'], $href, $post_num);
+		$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> %s#%d%s ', $post_row['MINI_POST_IMG'], $href, $bold_open, $post_num, $bold_close);
 		return $post_row;
 	}
 

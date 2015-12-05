@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Adds post numbers at the top of each post (#1, #2, #3 etc.) after the mini image in viewtopic, reply and MCP topic review. Can also display post IDs instead.",
 	"homepage": "https://github.com/kasimi",
-	"version": "1.0.0",
-	"time": "2015-05-05",
+	"version": "1.0.1",
+	"time": "2015-12-05",
 	"license": "GPL-2.0",
 	"authors": [{
 			"name": "kasimi",

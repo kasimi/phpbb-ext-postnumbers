@@ -29,4 +29,5 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_SKIP_NONAPPROVED_EXP'		=> 'Do not assign post numbers to unapproved and soft-deleted posts',
 	'POSTNUMBERS_DISPLAY_IDS'				=> 'Display post IDs instead of post numbers',
 	'POSTNUMBERS_DISPLAY_IDS_EXP'			=> 'If enabled, the above setting <span style="font-style: italic;">Skip non-approved posts</span>is ignored',
+	'POSTNUMBERS_BOLD'						=> 'Make post numbers/IDs bold',
 ));
