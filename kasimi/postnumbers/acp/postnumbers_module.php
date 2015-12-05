@@ -44,12 +44,12 @@ class postnumbers_module
 		}
 
 		$template->assign_vars(array(
-			'POSTNUMBERS_VERSION'				=> isset($config['kasimi.postnumbers.version']) ? $config['kasimi.postnumbers.version'] : '',
-			'POSTNUMBERS_ENABLED_VIEWTOPIC'		=> isset($config['kasimi.postnumbers.enabled.viewtopic']) ? $config['kasimi.postnumbers.enabled.viewtopic'] : '',
-			'POSTNUMBERS_ENABLED_REVIEW_REPLY'	=> isset($config['kasimi.postnumbers.enabled.review_reply']) ? $config['kasimi.postnumbers.enabled.review_reply'] : '',
-			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> isset($config['kasimi.postnumbers.enabled.review_mcp']) ? $config['kasimi.postnumbers.enabled.review_mcp'] : '',
-			'POSTNUMBERS_SKIP_NONAPPROVED'		=> isset($config['kasimi.postnumbers.skip_nonapproved']) ? $config['kasimi.postnumbers.skip_nonapproved'] : '',
-			'POSTNUMBERS_DISPLAY_IDS'			=> isset($config['kasimi.postnumbers.display_ids']) ? $config['kasimi.postnumbers.display_ids'] : '',
+			'POSTNUMBERS_VERSION'				=> isset($config['kasimi.postnumbers.version']) ? $config['kasimi.postnumbers.version'] : 'X.Y.Z',
+			'POSTNUMBERS_ENABLED_VIEWTOPIC'		=> isset($config['kasimi.postnumbers.enabled.viewtopic']) ? $config['kasimi.postnumbers.enabled.viewtopic'] : 0,
+			'POSTNUMBERS_ENABLED_REVIEW_REPLY'	=> isset($config['kasimi.postnumbers.enabled.review_reply']) ? $config['kasimi.postnumbers.enabled.review_reply'] : 0,
+			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> isset($config['kasimi.postnumbers.enabled.review_mcp']) ? $config['kasimi.postnumbers.enabled.review_mcp'] : 0,
+			'POSTNUMBERS_SKIP_NONAPPROVED'		=> isset($config['kasimi.postnumbers.skip_nonapproved']) ? $config['kasimi.postnumbers.skip_nonapproved'] : 0,
+			'POSTNUMBERS_DISPLAY_IDS'			=> isset($config['kasimi.postnumbers.display_ids']) ? $config['kasimi.postnumbers.display_ids'] : 0,
 			'U_ACTION'							=> $this->u_action,
 		));
 	}
