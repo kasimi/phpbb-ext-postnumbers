@@ -158,8 +158,12 @@ class listener implements EventSubscriberInterface
 			$bold_open = '<strong>';
 			$bold_close = '</strong>';
 		}
-		$href = isset($post_row['U_MINI_POST']) ? $post_row['U_MINI_POST'] : '#pr' . $post_row['POST_ID'];
-		$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> <span class="post-number">%s#%d%s</span> ', $post_row['MINI_POST_IMG'], $href, $bold_open, $post_num, $bold_close);
+
+		$post_row['POST_NUMBER'] = sprintf('<span class="post-number">%s#%d%s</span>', $bold_open, $post_num, $bold_close);
+
+		$href = isset($post_row['U_MINI_POST']) ? $post_row['U_MINI_POST'] : ('#pr' . $post_row['POST_ID']);
+		$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> %s ', $post_row['MINI_POST_IMG'], $href, $post_row['POST_NUMBER']);
+
 		return $post_row;
 	}
 
