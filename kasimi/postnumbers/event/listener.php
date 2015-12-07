@@ -77,10 +77,10 @@ class listener implements EventSubscriberInterface
 		// Show post numbers in viewtopic if
 		//	1) viewtopic is enabled in the extension preferences
 		//	2) the user is not a bot
-		//	3) the user's board preference is to sort topics by 't'ime
-		if ($this->cfg('enabled.viewtopic') && !$this->user->data['is_bot'] && $this->user->data['user_post_sortby_type'] == 't')
+		//	3) the user sorts the posts by 't'ime
+		if ($this->cfg('enabled.viewtopic') && !$this->user->data['is_bot'] && $this->request->variable('sk', $this->user->data['user_post_sortby_type']) == 't')
 		{
-			$is_ascending = $this->user->data['user_post_sortby_dir'] == 'a';
+			$is_ascending = $this->request->variable('sd', $this->user->data['user_post_sortby_dir']) == 'a';
 
 			// Initialize start and offset on first call if we don't display IDs
 			if (!$this->cfg('display_ids') && $this->start === false)
