@@ -20,24 +20,40 @@ class listener implements EventSubscriberInterface
 	/* @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \phpbb\request\request_interface */
+	protected $request;
+
 	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var boolean */
 	protected $start = false;
+
+	/** @var boolean */
 	protected $offset = false;
+
+	/** @var boolean */
+	protected $mcp_sorted_by_post_time = false;
 
 	/**
  	 * Constructor
 	 *
 	 * @param \phpbb\user							$user
 	 * @param \phpbb\config\config					$config
+	 * @param \phpbb\request\request_interface		$request
 	 * @param \phpbb\db\driver\driver_interface		$db
 	 */
-	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db)
+	public function __construct(
+		\phpbb\user $user,
+		\phpbb\config\config $config,
+		\phpbb\request\request_interface $request,
+		\phpbb\db\driver\driver_interface $db
+	)
 	{
-		$this->user = $user;
-		$this->config = $config;
-		$this->db = $db;
+		$this->user		= $user;
+		$this->config 	= $config;
+		$this->request	= $request;
+		$this->db		= $db;
 	}
 
 	/**
@@ -48,6 +64,7 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.viewtopic_modify_post_row'	=> 'postnum_in_viewtopic',
 			'core.topic_review_modify_row'		=> 'postnum_in_topic_review',
+			'core.mcp_global_f_read_auth_after'	=> 'postnum_in_mcp_review_before',
 			'core.mcp_topic_review_modify_row'	=> 'postnum_in_mcp_review',
 		);
 	}
@@ -120,11 +137,23 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Event: core.mcp_global_f_read_auth_after
+	 */
+	public function postnum_in_mcp_review_before($event)
+	{
+		// The MCP default post sorting is not the user's UCP setting,
+		// it is hard-coded in phpbb_mcp_sorting() to 't'. This means
+		// the posts in the MCP topic review are not sorted by post_time
+		// only if the request contains 'sk' and its value is not 't';
+		$this->mcp_sorted_by_post_time = $this->request->variable('sk', 't') == 't';
+	}
+
+	/**
 	 * Event: core.mcp_topic_review_modify_row
 	 */
 	public function postnum_in_mcp_review($event)
 	{
-		if ($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view')
+		if ($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view' && $this->mcp_sorted_by_post_time)
 		{
 			if (!$this->cfg('display_ids') && $this->start === false)
 			{
