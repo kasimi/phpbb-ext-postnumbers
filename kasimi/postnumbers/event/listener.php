@@ -87,7 +87,7 @@ class listener implements EventSubscriberInterface
 			}
 			else if ($this->request->variable('sk', $this->user->data['user_post_sortby_type']) == 't')
 			{
-				$post_num = $this->get_post_number($event['row'], $this->user->data['user_post_sortby_dir'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], true, false);
+				$post_num = $this->get_post_number($event['row'], $this->user->data['user_post_sortby_dir'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false);
 			}
 
 			if ($post_num)
@@ -113,8 +113,8 @@ class listener implements EventSubscriberInterface
 			}
 			else
 			{
-				$is_approved = $this->cfg('skip_nonapproved') ? true : null;
-				$post_num = $this->get_post_number($event['row'], 'd', $event['total'], $event['total'], $event['start'], false, $is_approved, true);
+				// Assume all posts are approved
+				$post_num = $this->get_post_number($event['row'], 'd', $event['total_posts'], $event['total_posts'], $event['start'], true);
 			}
 
 			if ($post_num)
@@ -131,8 +131,8 @@ class listener implements EventSubscriberInterface
 	{
 		// The MCP default post sorting is not the user's UCP setting,
 		// it is hard-coded in phpbb_mcp_sorting() to 't'. This means
+		// only if the request contains 'sk' and its value is not 't',
 		// the posts in the MCP topic review are NOT sorted by post_time
-		// only if the request contains 'sk' and its value is not 't';
 		if ($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view')
 		{
 			$post_num = false;
@@ -143,7 +143,7 @@ class listener implements EventSubscriberInterface
 			}
 			else if ($this->request->variable('sk', 't') == 't')
 			{
-				$post_num = $this->get_post_number($event['row'], 'a', $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], true, false);
+				$post_num = $this->get_post_number($event['row'], 'a', $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], false);
 			}
 
 			if ($post_num)
@@ -156,7 +156,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Returns the post number of the $row
 	 */
-	protected function get_post_number($row, $default_sort_dir, $approved_posts, $total_posts, $start, $is_strict_before, $is_approved, $need_post_count = false)
+	protected function get_post_number($row, $default_sort_dir, $approved_posts, $total_posts, $start, $is_reply_review)
 	{
 		$is_ascending = $this->request->variable('sd', $default_sort_dir) == 'a';
 
@@ -168,13 +168,25 @@ class listener implements EventSubscriberInterface
 			//	2) there is at least one non-approved post in the topic and
 			//	3a) posts are sorted ascending and we are not on the first page, or
 			//	3b) posts are sorted descending and we are not on the last page
-			$need_post_count = $need_post_count || ($this->cfg('skip_nonapproved') && $approved_posts != $total_posts && $is_ascending ? $start > 0 : $total_posts - $start > $this->config['posts_per_page']);
+			if ($is_reply_review)
+			{
+				$need_post_count = true;
+			}
+			else if ($this->cfg('skip_nonapproved') && $approved_posts != $total_posts)
+			{
+				$need_post_count = $is_ascending ? $start > 0 : $total_posts - $start > $this->config['posts_per_page'];
+			}
+			else
+			{
+				$need_post_count = false;
+			}
 
 			// Count non-approved posts on previous pages
-			$non_approved_posts_num = $need_post_count ? $this->get_post_count($row['topic_id'], $row['post_time'], $is_strict_before, $is_approved) : 0;
+			$count_approved = $is_reply_review ? ($this->cfg('skip_nonapproved') ? true : null) : false;
+			$non_approved_posts_num = $need_post_count ? $this->get_post_count($row['topic_id'], $row['post_time'], $is_reply_review, $count_approved) : 0;
 
 			// Ugly fix for calculating correct $first_post_num in topic review
-			if (!$is_strict_before)
+			if ($is_reply_review)
 			{
 				$start = 0;
 				$total_posts = 2 * $non_approved_posts_num;
@@ -218,16 +230,16 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Gets the number of approved/non-approved/all posts in a topic that have been posted before a certain time
 	 */
-	protected function get_post_count($topic_id, $post_time, $is_strict_before, $is_approved)
+	protected function get_post_count($topic_id, $post_time, $is_reply_review, $count_approved)
 	{
 		$sql_where = array(
 			sprintf('p.topic_id = %d', (int) $topic_id),
-			sprintf('p.post_time %s %d', $is_strict_before ? '<' : '<=', (int) $post_time),
+			sprintf('p.post_time %s %d', $is_reply_review ? '<=' : '<', (int) $post_time),
 		);
 
-		if (!is_null($is_approved))
+		if (!is_null($count_approved))
 		{
-			$sql_where[] = sprintf('p.post_visibility %s %d', $is_approved ? '=' : '!=', ITEM_APPROVED);
+			$sql_where[] = sprintf('p.post_visibility %s %d', $count_approved ? '=' : '!=', ITEM_APPROVED);
 		}
 
 		$sql = 'SELECT COUNT(*) as count
