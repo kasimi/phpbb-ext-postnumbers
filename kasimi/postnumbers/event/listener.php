@@ -32,9 +32,6 @@ class listener implements EventSubscriberInterface
 	/** @var boolean */
 	protected $offset = false;
 
-	/** @var boolean */
-	protected $mcp_sorted_by_post_time = false;
-
 	/**
  	 * Constructor
 	 *
@@ -73,24 +70,11 @@ class listener implements EventSubscriberInterface
 	 */
 	public function postnum_in_viewtopic($event)
 	{
-		// Show post numbers in viewtopic if
-		//	1) viewtopic is enabled in the extension preferences
-		//	2) the user is not a bot
-		//	3) the user sorts the posts by 't'ime
 		if ($this->cfg('enabled.viewtopic') && !$this->user->data['is_bot'])
 		{
-			$post_num = false;
-
-			if ($this->cfg('display_ids'))
-			{
-				$post_num = $event['row']['post_id'];
-			}
-			else if ($this->request->variable('sk', $this->user->data['user_post_sortby_type']) == 't')
-			{
-				$post_num = $this->get_post_number($event['row'], $this->user->data['user_post_sortby_dir'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false);
-			}
-
-			if ($post_num)
+			// The request variable for post sorting has priority over the UCP setting
+			$sorted_by_post_time = $this->request->variable('sk', $this->user->data['user_post_sortby_type']) == 't';
+			if ($post_num = $this->get_post_number($sorted_by_post_time, $event['row'], $this->user->data['user_post_sortby_dir'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -102,22 +86,10 @@ class listener implements EventSubscriberInterface
 	 */
 	public function postnum_in_topic_review($event)
 	{
-		// Show post numbers when reviewing a topic if
-		//	1) review_reply is enabled in the extension preferences
-		//  2) the user is on the topic review page
+		// The post sorting for the topic review is hard-coded to descending
 		if ($this->cfg('enabled.review_reply') && $event['mode'] == 'topic_review')
 		{
-			if ($this->cfg('display_ids'))
-			{
-				$post_num = $event['row']['post_id'];
-			}
-			else
-			{
-				// Assume all posts are approved
-				$post_num = $this->get_post_number($event['row'], 'd', $event['total_posts'], $event['total_posts'], $event['start'], true);
-			}
-
-			if ($post_num)
+			if ($post_num = $this->get_post_number(true, $event['row'], 'd', $event['total_posts'], $event['total_posts'], $event['start'], true))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -135,18 +107,8 @@ class listener implements EventSubscriberInterface
 		// the posts in the MCP topic review are NOT sorted by post_time
 		if ($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view')
 		{
-			$post_num = false;
-
-			if ($this->cfg('display_ids'))
-			{
-				$post_num = $event['row']['post_id'];
-			}
-			else if ($this->request->variable('sk', 't') == 't')
-			{
-				$post_num = $this->get_post_number($event['row'], 'a', $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], false);
-			}
-
-			if ($post_num)
+			$sorted_by_post_time = $this->request->variable('sk', 't') == 't';
+			if ($post_num = $this->get_post_number($sorted_by_post_time, $event['row'], 'a', $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], false))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -154,57 +116,62 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Returns the post number of the $row
+	 * Returns the post number/ID of the $row
 	 */
-	protected function get_post_number($row, $default_sort_dir, $approved_posts, $total_posts, $start, $is_reply_review)
+	protected function get_post_number($sorted_by_post_time, $row, $default_sort_dir, $approved_posts, $total_posts, $start, $is_reply_review)
 	{
+		// If we display IDs, skip all checks and calculations and return immediately
+		if ($this->cfg('display_ids'))
+		{
+			return $row['post_id'];
+		}
+
+		// Don't calculate post number if
+		//  - posts are not sorted by post time, or
+		//  - we display them only for approved posts and this post is not approved
+		if (!$sorted_by_post_time || $this->cfg('skip_nonapproved') && $row['post_visibility'] != ITEM_APPROVED)
+		{
+			return false;
+		}
+
 		$is_ascending = $this->request->variable('sd', $default_sort_dir) == 'a';
 
-		// Initialize start and offset on first call if we don't display IDs
+		// Initialize $first_post_num and $offset on first post
 		if ($this->first_post_num === false)
 		{
-			// We only need to query the number of non-approved posts if
-			//	1) we display post numbers for all posts including non-approved ones, or
-			//	2) there is at least one non-approved post in the topic and
-			//	3a) posts are sorted ascending and we are not on the first page, or
-			//	3b) posts are sorted descending and we are not on the last page
-			if ($is_reply_review)
+			// We only need to query the number of previous/non-approved posts in certain situations
+			$need_new_start = false;
+			if ($is_reply_review || $this->request->variable('st', 0) != 0)
 			{
-				$need_post_count = true;
+				$need_new_start = true;
 			}
 			else if ($this->cfg('skip_nonapproved') && $approved_posts != $total_posts)
 			{
-				$need_post_count = $is_ascending ? $start > 0 : $total_posts - $start > $this->config['posts_per_page'];
+				// We skip non-approved posts and the topic we are viewing contains
+				// at least one non-approved post. We only need to count posts if
+				//  - posts are sorted ascending and we are not on the first page, or
+				//  - posts are sorted descending and we are not on the last page
+				$need_new_start = $is_ascending ? $start > 0 : $total_posts - $start > $this->config['posts_per_page'];
 			}
-			else
+
+			if ($need_new_start)
 			{
-				$need_post_count = false;
+				$post_count = $this->get_post_count($row['topic_id'], $row['post_time']);
+				if ($is_ascending)
+				{
+					$start = $post_count;
+				}
+				else
+				{
+					$total_posts += $start == 0 ? $post_count + 1 - $total_posts : $post_count - $start;
+				}
 			}
 
-			// Count non-approved posts on previous pages
-			$count_approved = $is_reply_review ? ($this->cfg('skip_nonapproved') ? true : null) : false;
-			$non_approved_posts_num = $need_post_count ? $this->get_post_count($row['topic_id'], $row['post_time'], $is_reply_review, $count_approved) : 0;
-
-			// Ugly fix for calculating correct $first_post_num in topic review
-			if ($is_reply_review)
-			{
-				$start = 0;
-				$total_posts = 2 * $non_approved_posts_num;
-			}
-
-			$this->first_post_num = $is_ascending ? ($start - $non_approved_posts_num) : ($total_posts - $start - $non_approved_posts_num);
+			$this->first_post_num = $is_ascending ? $start : $total_posts - $start;
 			$this->offset = $is_ascending ? 1 : 0;
 		}
 
-		// Only add post number if
-		//	1) we display post numbers for all posts including non-approved ones, or
-		//	2) post is approved
-		if (!$this->cfg('skip_nonapproved') || $row['post_visibility'] == ITEM_APPROVED)
-		{
-			return $is_ascending ? ($this->first_post_num + $this->offset++) : ($this->first_post_num - $this->offset++);
-		}
-
-		return false;
+		return $this->first_post_num + ($is_ascending ? +$this->offset++ : -$this->offset++);
 	}
 
 	/**
@@ -228,18 +195,18 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Gets the number of approved/non-approved/all posts in a topic that have been posted before a certain time
+	 * Gets the number of approved/all posts in a topic that have been posted before a certain time
 	 */
-	protected function get_post_count($topic_id, $post_time, $is_reply_review, $count_approved)
+	protected function get_post_count($topic_id, $post_time)
 	{
 		$sql_where = array(
-			sprintf('p.topic_id = %d', (int) $topic_id),
-			sprintf('p.post_time %s %d', $is_reply_review ? '<=' : '<', (int) $post_time),
+			'p.topic_id = ' . (int) $topic_id,
+			'p.post_time < ' . (int) $post_time,
 		);
 
-		if (!is_null($count_approved))
+		if ($this->cfg('skip_nonapproved'))
 		{
-			$sql_where[] = sprintf('p.post_visibility %s %d', $count_approved ? '=' : '!=', ITEM_APPROVED);
+			$sql_where[] = 'p.post_visibility = ' . (int) ITEM_APPROVED;
 		}
 
 		$sql = 'SELECT COUNT(*) as count
