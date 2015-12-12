@@ -72,9 +72,7 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->cfg('enabled.viewtopic') && !$this->user->data['is_bot'])
 		{
-			// The request variable for post sorting has priority over the UCP setting
-			$sorted_by_post_time = $this->request->variable('sk', $this->user->data['user_post_sortby_type']) == 't';
-			if ($post_num = $this->get_post_number($sorted_by_post_time, $event['row'], $this->user->data['user_post_sortby_dir'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false))
+			if ($post_num = $this->get_post_number($this->user->data['user_post_sortby_type'], $this->user->data['user_post_sortby_dir'], $this->user->data['user_post_show_days'], $event['row'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -86,10 +84,9 @@ class listener implements EventSubscriberInterface
 	 */
 	public function postnum_in_topic_review($event)
 	{
-		// The post sorting for the topic review is hard-coded to descending
 		if ($this->cfg('enabled.review_reply') && $event['mode'] == 'topic_review')
 		{
-			if ($post_num = $this->get_post_number(true, $event['row'], 'd', $event['total_posts'], $event['total_posts'], $event['start'], true))
+			if ($post_num = $this->get_post_number('t', 'd', 0, $event['row'], $event['total_posts'], $event['total_posts'], $event['start'], true))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -101,14 +98,9 @@ class listener implements EventSubscriberInterface
 	 */
 	public function postnum_in_mcp_review($event)
 	{
-		// The MCP default post sorting is not the user's UCP setting,
-		// it is hard-coded in phpbb_mcp_sorting() to 't'. This means
-		// only if the request contains 'sk' and its value is not 't',
-		// the posts in the MCP topic review are NOT sorted by post_time
 		if ($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view')
 		{
-			$sorted_by_post_time = $this->request->variable('sk', 't') == 't';
-			if ($post_num = $this->get_post_number($sorted_by_post_time, $event['row'], 'a', $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], false))
+			if ($post_num = $this->get_post_number('t', 'a', 0, $event['row'], $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], false))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -118,7 +110,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Returns the post number/ID of the $row
 	 */
-	protected function get_post_number($sorted_by_post_time, $row, $default_sort_dir, $approved_posts, $total_posts, $start, $is_reply_review)
+	protected function get_post_number($default_sort_by, $default_sort_dir, $default_days, $row, $approved_posts, $total_posts, $start, $is_reply_review)
 	{
 		// If we display IDs, skip all checks and calculations and return immediately
 		if ($this->cfg('display_ids'))
@@ -129,7 +121,7 @@ class listener implements EventSubscriberInterface
 		// Don't calculate post number if
 		//  - posts are not sorted by post time, or
 		//  - we display them only for approved posts and this post is not approved
-		if (!$sorted_by_post_time || $this->cfg('skip_nonapproved') && $row['post_visibility'] != ITEM_APPROVED)
+		if ($this->request->variable('sk', $default_sort_by) != 't' || $this->cfg('skip_nonapproved') && $row['post_visibility'] != ITEM_APPROVED)
 		{
 			return false;
 		}
@@ -141,7 +133,7 @@ class listener implements EventSubscriberInterface
 		{
 			// We only need to query the number of previous/non-approved posts in certain situations
 			$need_new_start = false;
-			if ($is_reply_review || $this->request->variable('st', 0) != 0)
+			if ($is_reply_review || $this->request->variable('st', $default_days) != 0)
 			{
 				$need_new_start = true;
 			}
