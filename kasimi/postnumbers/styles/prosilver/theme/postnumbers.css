@@ -1,0 +1,50 @@
+/**
+ *
+ * @package Post Numbers
+ * @version 1.0.1
+ * @copyright (c) 2015 kasimi
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+.tooltip-container {
+	display: none;
+	position: absolute;
+	margin-top: -40px;
+	z-index: 1000;
+}
+
+.tooltip-text {
+	background-color: #FFF;
+	padding: 5px;
+	font-weight: bold;
+}
+
+.tooltip-pointer  {
+	position: relative;
+	background: #FFF;
+	border: 1px solid #BBB;
+}
+
+.tooltip-pointer:after, .tooltip-pointer:before {
+	content: '';
+	position: absolute;
+	pointer-events: none;
+	border: solid transparent;
+	top: 100%;
+	height: 0;
+	width: 0;
+}
+
+.tooltip-pointer:before {
+	left: 50%;
+	border-width: 7px;
+	margin-left: -7px;
+	border-top-color: #BBB;
+}
+
+.tooltip-pointer:after {
+	left: 50%;
+	border-width: 6px;
+	margin-left: -6px;
+	border-top-color: #FFF;
+}

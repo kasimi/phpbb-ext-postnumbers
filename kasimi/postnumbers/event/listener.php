@@ -23,14 +23,20 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
+	/* @var \phpbb\template\template */
+	protected $template;
+
 	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
 	/** @var boolean */
-	protected $first_post_num = false;
+	protected $is_active = false;
 
-	/** @var boolean */
-	protected $offset = false;
+	/** @var int */
+	protected $first_post_num = -1;
+
+	/** @var int */
+	protected $offset = -1;
 
 	/**
  	 * Constructor
@@ -38,18 +44,21 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\user							$user
 	 * @param \phpbb\config\config					$config
 	 * @param \phpbb\request\request_interface		$request
+	 * @param \phpbb\template\template				$template
 	 * @param \phpbb\db\driver\driver_interface		$db
 	 */
 	public function __construct(
 		\phpbb\user $user,
 		\phpbb\config\config $config,
 		\phpbb\request\request_interface $request,
+		\phpbb\template\template $template,
 		\phpbb\db\driver\driver_interface $db
 	)
 	{
 		$this->user		= $user;
 		$this->config 	= $config;
 		$this->request	= $request;
+		$this->template = $template;
 		$this->db		= $db;
 	}
 
@@ -59,10 +68,36 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewtopic_modify_post_row'	=> 'postnum_in_viewtopic',
-			'core.topic_review_modify_row'		=> 'postnum_in_topic_review',
-			'core.mcp_topic_review_modify_row'	=> 'postnum_in_mcp_review',
+			'core.viewtopic_assign_template_vars_before'	=> 'init_viewtopic',
+			'core.viewtopic_modify_post_row'				=> 'postnum_in_viewtopic',
+			'core.posting_modify_template_vars'				=> 'init_topic_review',
+			'core.topic_review_modify_row'					=> 'postnum_in_topic_review',
+			'core.mcp_global_f_read_auth_after'				=> 'init_mcp_review',
+			'core.mcp_topic_review_modify_row'				=> 'postnum_in_mcp_review',
 		);
+	}
+
+	/**
+	 * Prepare language & template
+	 */
+	protected function init()
+	{
+		$this->user->add_lang_ext('kasimi/postnumbers', 'common');
+		$this->template->assign_vars(array(
+			'S_POSTNUMBERS_CLIPBOARD' => $this->cfg('clipboard'),
+		));
+	}
+
+	/**
+	 * Event: core.viewtopic_assign_template_vars_before
+	 */
+	public function init_viewtopic($event)
+	{
+		$this->is_active = $this->cfg('enabled.viewtopic') && !$this->user->data['is_bot'];
+		if ($this->is_active)
+		{
+			$this->init();
+		}
 	}
 
 	/**
@@ -70,7 +105,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function postnum_in_viewtopic($event)
 	{
-		if ($this->cfg('enabled.viewtopic') && !$this->user->data['is_bot'])
+		if ($this->is_active)
 		{
 			if ($post_num = $this->get_post_number($this->user->data['user_post_sortby_type'], $this->user->data['user_post_sortby_dir'], $this->user->data['user_post_show_days'], $event['row'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false))
 			{
@@ -80,11 +115,23 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Event: core.posting_modify_template_vars
+	 */
+	public function init_topic_review($event)
+	{
+		$this->is_active = $this->cfg('enabled.review_reply');
+		if ($this->is_active)
+		{
+			$this->init();
+		}
+	}
+
+	/**
 	 * Event: core.topic_review_modify_row
 	 */
 	public function postnum_in_topic_review($event)
 	{
-		if ($this->cfg('enabled.review_reply') && $event['mode'] == 'topic_review')
+		if ($this->is_active && $event['mode'] == 'topic_review')
 		{
 			if ($post_num = $this->get_post_number('t', 'd', 0, $event['row'], $event['total_posts'], $event['total_posts'], $event['start'], true))
 			{
@@ -94,11 +141,23 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Event: core.mcp_global_f_read_auth_after
+	 */
+	public function init_mcp_review($event)
+	{
+		$this->is_active = $this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view';
+		if ($this->is_active)
+		{
+			$this->init();
+		}
+	}
+
+	/**
 	 * Event: core.mcp_topic_review_modify_row
 	 */
 	public function postnum_in_mcp_review($event)
 	{
-		if ($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view')
+		if ($this->is_active)
 		{
 			if ($post_num = $this->get_post_number('t', 'a', 0, $event['row'], $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], false))
 			{
@@ -129,7 +188,7 @@ class listener implements EventSubscriberInterface
 		$is_ascending = $this->request->variable('sd', $default_sort_dir) == 'a';
 
 		// Initialize $first_post_num and $offset on first post
-		if ($this->first_post_num === false)
+		if ($this->first_post_num === -1)
 		{
 			// We only need to query the number of previous/non-approved posts in certain situations
 			$need_new_start = false;
@@ -178,7 +237,11 @@ class listener implements EventSubscriberInterface
 			$bold_close = '</strong>';
 		}
 
-		$post_row['POST_NUMBER'] = sprintf('<span class="post-number">%s#%d%s</span>', $bold_open, $post_num, $bold_close);
+		$lang_copy_title = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_TITLE'));
+		$lang_copied = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPIED'));
+		$lang_copy_manually = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_MANUALLY'));
+
+		$post_row['POST_NUMBER'] = sprintf('<span class="post-number" title="%s" data-tooltip="%s" data-copy-manually="%s">%s#%d%s</span>', $lang_copy_title, $lang_copied, $lang_copy_manually, $bold_open, $post_num, $bold_close);
 
 		$href = isset($post_row['U_MINI_POST']) ? $post_row['U_MINI_POST'] : ('#pr' . $post_row['POST_ID']);
 		$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> %s ', $post_row['MINI_POST_IMG'], $href, $post_row['POST_NUMBER']);
@@ -212,7 +275,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 *	Quick access to this extension's config values
+	 * Quick access to this extension's config values
 	 */
 	protected function cfg($key)
 	{
