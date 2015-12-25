@@ -13,18 +13,18 @@ jQuery(function($) {
 			var success = false;
 			var text = o.text(this);
 			if (document.execCommand) {
-				var $temp = $('<div>').text(text).css({
+				var $temp = $('<input>').val(text).css({
 					position	: 'absolute',
 					left		: '-1000px',
 					top			: '-1000px'
 				});
 				$('body').append($temp);
-				var range = document.createRange();
-				range.selectNodeContents($temp.get(0));
-				var selection = window.getSelection();
-				selection.removeAllRanges();
-				selection.addRange(range);
 				try {
+					var range = document.createRange();
+					range.selectNodeContents($temp.select().get(0));
+					var selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange(range);
 					success = document.execCommand('copy', false, null);
 				}
 				catch (e) {
