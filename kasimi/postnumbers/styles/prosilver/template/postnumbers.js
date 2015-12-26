@@ -1,7 +1,7 @@
 /**
  *
  * @package Post Numbers
- * @version 1.0.1
+ * @version 1.0.3
  * @copyright (c) 2015 kasimi
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
@@ -13,23 +13,21 @@ jQuery(function($) {
 			var success = false;
 			var text = o.text(this);
 			if (document.execCommand) {
-				var $temp = $('<input>').val(text).css({
-					position	: 'absolute',
-					left		: '-1000px',
-					top			: '-1000px'
-				});
-				$('body').append($temp);
+				var temp = document.createElement('input');
+				temp.value = text;
+				temp.style.position = 'fixed';
+				temp.style.opacity = 0;
+				temp.style.top = 0;
+				document.body.appendChild(temp);
 				try {
-					var range = document.createRange();
-					range.selectNodeContents($temp.select().get(0));
-					var selection = window.getSelection();
-					selection.removeAllRanges();
-					selection.addRange(range);
-					success = document.execCommand('copy', false, null);
-				}
-				catch (e) {
+					temp.select();
+					success = document.execCommand('cut') && temp.value === '';
+				} catch (e) {
+					if (typeof console !== 'undefined' && console.log) {
+						console.log('execCommand() error: ' + e);
+					}
 				} finally {
-					$temp.remove();
+					document.body.removeChild(temp);
 				}
 			}
 			o[success ? 'success' : 'error'](this, text);
