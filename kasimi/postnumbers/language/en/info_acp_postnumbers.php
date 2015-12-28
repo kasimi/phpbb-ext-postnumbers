@@ -29,7 +29,11 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_SKIP_NONAPPROVED_EXP'		=> 'Do not assign post numbers to unapproved and soft-deleted posts',
 	'POSTNUMBERS_DISPLAY_IDS'				=> 'Display post IDs instead of post numbers',
 	'POSTNUMBERS_DISPLAY_IDS_EXP'			=> 'If enabled, the above setting <span style="font-style: italic;">Skip non-approved posts</span> is ignored',
+	'POSTNUMBERS_LOCATION'					=> 'Location of post numbers',
+	'POSTNUMBERS_LOCATION_AUTHOR'			=> 'Between post image and post author name',
+	'POSTNUMBERS_LOCATION_SUBJECT'			=> 'In post subject',
 	'POSTNUMBERS_CLIPBOARD'					=> 'Copy post link to clipboard when clicking on post number',
-	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Modern browser required. Old browsers will display a promt containing the post link instead.',
+	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Only relevant if post numbers are displayed between post image and post author name. Only works in modern browsers, at least: Chrome 42, Firefox 41, IE 9, Opera 29. Safari is not supported. Unsupported browsers display a promt containing the post link instead.',
 	'POSTNUMBERS_BOLD'						=> 'Make post numbers/IDs bold',
+	'POSTNUMBERS_BOLD_EXP'					=> 'Only relevant if post numbers are displayed between post image and post author name.',
 ));

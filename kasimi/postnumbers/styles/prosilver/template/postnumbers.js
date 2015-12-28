@@ -1,7 +1,7 @@
 /**
  *
  * @package Post Numbers
- * @version 1.0.3
+ * @version 1.0.4
  * @copyright (c) 2015 kasimi
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
@@ -43,12 +43,12 @@ jQuery(function($) {
 				.insertBefore($this)
 				.css('margin-left', $this.position().left + $this.width() / 2 - $container.width() / 2 + 'px')
 				.fadeIn(o.speedIn, function() {
-				setTimeout(function() {
-					$container.fadeOut(o.speedOut, function() {
-						$container.remove();
-					});
-				}, o.alive);
-			});
+					setTimeout(function() {
+						$container.fadeOut(o.speedOut, function() {
+							$container.remove();
+						});
+					}, o.alive);
+				});
 		});
 	};
 

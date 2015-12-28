@@ -36,6 +36,7 @@ class postnumbers_module
 			$config->set('kasimi.postnumbers.enabled.review_mcp', $request->variable('postnumbers_enabled_review_mcp', 0));
 			$config->set('kasimi.postnumbers.skip_nonapproved', $request->variable('postnumbers_skip_nonapproved', 0));
 			$config->set('kasimi.postnumbers.display_ids', $request->variable('postnumbers_display_ids', 0));
+			$config->set('kasimi.postnumbers.location', $request->variable('postnumbers_location', 0));
 			$config->set('kasimi.postnumbers.clipboard', $request->variable('postnumbers_clipboard', 0));
 			$config->set('kasimi.postnumbers.bold', $request->variable('postnumbers_bold', 0));
 
@@ -52,6 +53,7 @@ class postnumbers_module
 			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> isset($config['kasimi.postnumbers.enabled.review_mcp']) ? $config['kasimi.postnumbers.enabled.review_mcp'] : 0,
 			'POSTNUMBERS_SKIP_NONAPPROVED'		=> isset($config['kasimi.postnumbers.skip_nonapproved']) ? $config['kasimi.postnumbers.skip_nonapproved'] : 0,
 			'POSTNUMBERS_DISPLAY_IDS'			=> isset($config['kasimi.postnumbers.display_ids']) ? $config['kasimi.postnumbers.display_ids'] : 0,
+			'POSTNUMBERS_LOCATION'				=> isset($config['kasimi.postnumbers.location']) ? $config['kasimi.postnumbers.location'] : 0,
 			'POSTNUMBERS_CLIPBOARD'				=> isset($config['kasimi.postnumbers.clipboard']) ? $config['kasimi.postnumbers.clipboard'] : 0,
 			'POSTNUMBERS_BOLD'					=> isset($config['kasimi.postnumbers.bold']) ? $config['kasimi.postnumbers.bold'] : 0,
 			'U_ACTION'							=> $this->u_action,

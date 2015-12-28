@@ -1,10 +1,10 @@
 {
 	"name": "kasimi/postnumbers",
 	"type": "phpbb-extension",
-	"description": "Adds post numbers at the top of each post (#1, #2, #3 etc.) after the mini image in viewtopic, reply and MCP topic review. Can also display post IDs instead. Allows the administrator to enable Copy to Clipboard when clicking on the post number.",
+	"description": "Adds post numbers (#1, #2, #3 etc.) either at the top of each post after the mini image, or in the post subject. Takes effect in viewtopic, reply and MCP topic review. Can also display post IDs instead. Allows the administrator to enable Copy to Clipboard when clicking on the post number.",
 	"homepage": "https://github.com/kasimi",
-	"version": "1.0.3",
-	"time": "2015-12-24",
+	"version": "1.0.4",
+	"time": "2015-12-29",
 	"license": "GPL-2.0",
 	"authors": [{
 			"name": "kasimi",

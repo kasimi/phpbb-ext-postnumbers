@@ -38,6 +38,9 @@ class listener implements EventSubscriberInterface
 	/** @var int */
 	protected $offset = -1;
 
+	/** @var array */
+	protected $cache = array();
+
 	/**
  	 * Constructor
 	 *
@@ -78,14 +81,26 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Prepare language & template
+	 * Prepare language, cache & template
 	 */
 	protected function init()
 	{
-		$this->user->add_lang_ext('kasimi/postnumbers', 'common');
-		$this->template->assign_vars(array(
-			'S_POSTNUMBERS_CLIPBOARD' => $this->cfg('clipboard'),
-		));
+		// We only need to load the language file and prepare the cache for the copy-on-click feature,
+		// which is only enabled if post numbers are displayed between post image and post author name.
+		if ($this->cfg('location') == 0)
+		{
+			$this->user->add_lang_ext('kasimi/postnumbers', 'common');
+
+			$this->cache['lang_copy_title'] = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_TITLE'));
+			$this->cache['lang_copied'] = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPIED'));
+			$this->cache['lang_copy_manually'] = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_MANUALLY'));
+
+			$is_bold = $this->cfg('bold');
+			$this->cache['bold_open'] = $is_bold ? '<strong>' : '';
+			$this->cache['bold_close'] = $is_bold ? '</strong>' : '';
+
+			$this->template->assign_var('S_POSTNUMBERS_CLIPBOARD', $this->cfg('clipboard'));
+		}
 	}
 
 	/**
@@ -230,21 +245,17 @@ class listener implements EventSubscriberInterface
 	 */
 	protected function inject_post_num($post_row, $post_num)
 	{
-		$bold_open = $bold_close = '';
-		if ($this->cfg('bold'))
+		if ($this->cfg('location') == 1)
 		{
-			$bold_open = '<strong>';
-			$bold_close = '</strong>';
+			$post_row['POST_NUMBER'] = sprintf('<span class="post-number post-number-subject">#%d</span>', $post_num);
+			$post_row['POST_SUBJECT'] = $post_row['POST_NUMBER'] . ' ' . $post_row['POST_SUBJECT'];
 		}
-
-		$lang_copy_title = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_TITLE'));
-		$lang_copied = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPIED'));
-		$lang_copy_manually = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_MANUALLY'));
-
-		$post_row['POST_NUMBER'] = sprintf('<span class="post-number" title="%s" data-tooltip="%s" data-copy-manually="%s">%s#%d%s</span>', $lang_copy_title, $lang_copied, $lang_copy_manually, $bold_open, $post_num, $bold_close);
-
-		$href = isset($post_row['U_MINI_POST']) ? $post_row['U_MINI_POST'] : ('#pr' . $post_row['POST_ID']);
-		$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> %s ', $post_row['MINI_POST_IMG'], $href, $post_row['POST_NUMBER']);
+		else
+		{
+			$post_row['POST_NUMBER'] = sprintf('<span class="post-number post-number-author" title="%s" data-tooltip="%s" data-copy-manually="%s">%s#%d%s</span>', $this->cache['lang_copy_title'], $this->cache['lang_copied'], $this->cache['lang_copy_manually'], $this->cache['bold_open'], $post_num, $this->cache['bold_close']);
+			$href = isset($post_row['U_MINI_POST']) ? $post_row['U_MINI_POST'] : ('#pr' . $post_row['POST_ID']);
+			$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> %s ', $post_row['MINI_POST_IMG'], $href, $post_row['POST_NUMBER']);
+		}
 
 		return $post_row;
 	}

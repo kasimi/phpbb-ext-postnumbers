@@ -43,6 +43,15 @@
 		</dl>
 		<hr>
 		<dl>
+			<dt><label>{L_POSTNUMBERS_LOCATION}{L_COLON}</label></dt>
+			<dd>
+				<select name="postnumbers_location">
+					<option value="0"<!-- IF POSTNUMBERS_LOCATION == 0 --> selected="selected"<!-- ENDIF -->>{L_POSTNUMBERS_LOCATION_AUTHOR}</option>
+					<option value="1"<!-- IF POSTNUMBERS_LOCATION == 1 --> selected="selected"<!-- ENDIF -->>{L_POSTNUMBERS_LOCATION_SUBJECT}</option>
+				</select>
+			</dd>
+		</dl>
+		<dl>
 			<dt><label for="postnumbers_clipboard">{L_POSTNUMBERS_CLIPBOARD}{L_COLON}</label><br /><span>{L_POSTNUMBERS_CLIPBOARD_EXP}</span></dt>
 			<dd>
 				<label><input type="radio" class="radio" name="postnumbers_clipboard" value="1" id="postnumbers_clipboard"<!-- IF POSTNUMBERS_CLIPBOARD --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
@@ -50,7 +59,7 @@
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="postnumbers_bold">{L_POSTNUMBERS_BOLD}{L_COLON}</label></dt>
+			<dt><label for="postnumbers_bold">{L_POSTNUMBERS_BOLD}{L_COLON}</label><br /><span>{L_POSTNUMBERS_BOLD_EXP}</span></dt>
 			<dd>
 				<label><input type="radio" class="radio" name="postnumbers_bold" value="1" id="postnumbers_bold"<!-- IF POSTNUMBERS_BOLD --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
 				<label><input type="radio" class="radio" name="postnumbers_bold" value="0"<!-- IF not POSTNUMBERS_BOLD --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
