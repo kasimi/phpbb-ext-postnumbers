@@ -29,5 +29,11 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_SKIP_NONAPPROVED_EXP'		=> 'No asignar números de mensajes a mensajes no aprobados y [Soft] Borrados',
 	'POSTNUMBERS_DISPLAY_IDS'				=> 'Mostrar los IDs de mensaje en lugar de números de mensajes',
 	'POSTNUMBERS_DISPLAY_IDS_EXP'			=> 'Si está habilitado, el ajuste anterior <span style="font-style: italic;">Omitir mensajes no aprobados</span> será ignorado',
-	'POSTNUMBERS_BOLD'						=> 'Hacer los números de mensajes/IDs en negrita',
+	'POSTNUMBERS_LOCATION'					=> 'Localización de la numeración en el mensaje',
+	'POSTNUMBERS_LOCATION_AUTHOR'			=> 'Ingrese una imagen y el nombre del autor',
+	'POSTNUMBERS_LOCATION_SUBJECT'			=> 'Asunto del mensaje',
+	'POSTNUMBERS_CLIPBOARD'					=> 'Copiar el enlace del mensaje cuando se haga clic en la numeración del mensaje',
+	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Solamente es válido si la numeración es mostrada entre la imagen y el nombre del autor. Solo funciona en navegadores modernos: Chrome 42, Firefox 41, IE 9, Opera 29. No funciona con Safari. Navegadores no soportados muestran un prompt conteniendo un enlace.',
+	'POSTNUMBERS_BOLD'						=> 'Exhibe la numeración/IDs en negritas',
+	'POSTNUMBERS_BOLD_EXP'					=> 'Solamente es válido se la numeración es mostrada entre la imagen y el nombre del autor.',
 ));
