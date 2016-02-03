@@ -34,6 +34,6 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_LOCATION_SUBJECT'			=> 'Asunto del mensaje',
 	'POSTNUMBERS_CLIPBOARD'					=> 'Copiar el enlace del mensaje cuando se haga clic en la numeración del mensaje',
 	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Solamente es válido si la numeración es mostrada entre la imagen y el nombre del autor. Solo funciona en navegadores modernos: Chrome 42, Firefox 41, IE 9, Opera 29. No funciona con Safari. Navegadores no soportados muestran un prompt conteniendo un enlace.',
-	'POSTNUMBERS_BOLD'						=> 'Exhibe la numeración/IDs en negritas',
-	'POSTNUMBERS_BOLD_EXP'					=> 'Solamente es válido se la numeración es mostrada entre la imagen y el nombre del autor.',
+	'POSTNUMBERS_BOLD'						=> 'Muestra la numeración/IDs en negritas',
+	'POSTNUMBERS_BOLD_EXP'					=> 'Solamente es válido si la numeración es mostrada entre la imagen y el nombre del autor.',
 ));
