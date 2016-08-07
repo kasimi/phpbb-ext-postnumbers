@@ -2,10 +2,10 @@ services:
     kasimi.postnumbers.listener:
         class: kasimi\postnumbers\event\listener
         arguments:
-            - @user
-            - @config
-            - @request
-            - @template
-            - @dbal.conn
+            - '@user'
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@dbal.conn'
         tags:
             - { name: event.listener }
