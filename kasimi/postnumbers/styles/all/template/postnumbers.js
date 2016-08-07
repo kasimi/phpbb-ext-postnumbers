@@ -1,17 +1,18 @@
 /**
  *
  * @package Post Numbers
- * @version 1.0.4
- * @copyright (c) 2015 kasimi
+ * @version 1.1.0
+ * @copyright (c) 2016 kasimi
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
  */
+
 jQuery(function($) {
 	// Clipboard plugin
 	$.fn.toClipboard = function(o) {
 		return this.each(function() {
 			var success = false;
-			var text = o.text(this);
+			var text = o.text.call(this);
 			if (document.execCommand) {
 				var temp = document.createElement('input');
 				temp.value = text;
@@ -30,7 +31,7 @@ jQuery(function($) {
 					document.body.removeChild(temp);
 				}
 			}
-			o[success ? 'success' : 'error'](this, text);
+			o[success ? 'success' : 'error'].call(this, text);
 		});
 	};
 
@@ -53,23 +54,30 @@ jQuery(function($) {
 	};
 
 	$('.postbody').on('click', '.post-number', function(e) {
-		var $this = $(this);
-		$this.parent().toClipboard({
-			text: function(trigger) {
-				return $(trigger).get(0).href;
+		e.preventDefault();
+		$(this).toClipboard({
+			text: function() {
+				return $(this).find('a').get(0).href;
 			},
-			success: function(trigger, text) {
-				$(trigger).tooltip({
-					text		: $this.data('tooltip'),
+			success: function(text) {
+				$(this).tooltip({
+					text		: postNumbers.lang.copied,
 					speedIn		: 100,
 					alive		: 500,
 					speedOut	: 1000
 				});
 			},
-			error: function(trigger, text) {
-				window.prompt($this.data('copy-manually'), text);
+			error: function(text) {
+				var $input = $('<input>', {
+					type		: 'text',
+					value		: text,
+					css			: { width: '100%' }
+				});
+				phpbb.alert(postNumbers.lang.copyManually, $input);
+				setTimeout(function() {
+					$input.focus().select();
+				}, 1);
 			}
 		});
-		e.preventDefault();
 	});
 });
