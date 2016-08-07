@@ -3,7 +3,7 @@
 /**
  *
  * @package phpBB Extension - Post Numbers
- * @copyright (c) 2015 kasimi
+ * @copyright (c) 2016 kasimi
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
@@ -32,14 +32,14 @@ class listener implements EventSubscriberInterface
 	/** @var boolean */
 	protected $is_active = false;
 
+	/** @var string */
+	protected $location;
+
 	/** @var int */
 	protected $first_post_num = -1;
 
 	/** @var int */
 	protected $offset = -1;
-
-	/** @var array */
-	protected $cache = array();
 
 	/**
  	 * Constructor
@@ -51,18 +51,18 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\db\driver\driver_interface		$db
 	 */
 	public function __construct(
-		\phpbb\user $user,
-		\phpbb\config\config $config,
-		\phpbb\request\request_interface $request,
-		\phpbb\template\template $template,
-		\phpbb\db\driver\driver_interface $db
+		\phpbb\user									$user,
+		\phpbb\config\config						$config,
+		\phpbb\request\request_interface			$request,
+		\phpbb\template\template					$template,
+		\phpbb\db\driver\driver_interface			$db
 	)
 	{
-		$this->user		= $user;
-		$this->config 	= $config;
-		$this->request	= $request;
-		$this->template = $template;
-		$this->db		= $db;
+		$this->user									= $user;
+		$this->config 								= $config;
+		$this->request								= $request;
+		$this->template								= $template;
+		$this->db									= $db;
 	}
 
 	/**
@@ -81,42 +81,60 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Prepare language, cache & template
+	 * Prepare template data
+	 *
+	 * @param bool $is_active
 	 */
-	protected function init()
+	protected function init($is_active)
 	{
-		// We only need to load the language file and prepare the cache for the copy-on-click feature,
-		// which is only enabled if post numbers are displayed between post image and post author name.
-		if ($this->cfg('location') == 0)
+		if (!($this->is_active = $is_active))
+		{
+			return;
+		}
+
+		switch ($this->cfg('location'))
+		{
+			case 1:
+				$this->location = 'subject';
+			break;
+
+			default:
+				$this->location = 'post_img';
+			break;
+		}
+
+		$template_data = array(
+			'S_POSTNUMBERS_LOCATION'	=> $this->location,
+		);
+
+		if ($this->location === 'post_img')
 		{
 			$this->user->add_lang_ext('kasimi/postnumbers', 'common');
 
-			$this->cache['lang_copy_title'] = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_TITLE'));
-			$this->cache['lang_copied'] = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPIED'));
-			$this->cache['lang_copy_manually'] = utf8_htmlspecialchars($this->user->lang('POSTNUMBERS_COPY_MANUALLY'));
-
-			$is_bold = $this->cfg('bold');
-			$this->cache['bold_open'] = $is_bold ? '<strong>' : '';
-			$this->cache['bold_close'] = $is_bold ? '</strong>' : '';
-
-			$this->template->assign_var('S_POSTNUMBERS_CLIPBOARD', $this->cfg('clipboard'));
+			$template_data = array_merge($template_data, array(
+				'S_POSTNUMBERS_CLIPBOARD'		=> $this->cfg('clipboard'),
+				'S_POSTNUMBERS_BOLD'			=> $this->cfg('bold'),
+				'POSTNUMBERS_PHPBB_VERSION'		=> phpbb_version_compare(PHPBB_VERSION, '3.1.0@dev', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.2.0@dev', '<') ? '31x' : (phpbb_version_compare(PHPBB_VERSION, '3.2.0@dev', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.3.0@dev', '<') ? '32x' : ''),
+			));
 		}
+
+		$this->template->assign_vars($template_data);
 	}
 
 	/**
 	 * Event: core.viewtopic_assign_template_vars_before
+	 *
+	 * @param $event
 	 */
 	public function init_viewtopic($event)
 	{
-		$this->is_active = $this->cfg('enabled.viewtopic') && !$this->user->data['is_bot'];
-		if ($this->is_active)
-		{
-			$this->init();
-		}
+		$this->init($this->cfg('enabled.viewtopic') && !$this->user->data['is_bot']);
 	}
 
 	/**
 	 * Event: core.viewtopic_modify_post_row
+	 *
+	 * @param $event
 	 */
 	public function postnum_in_viewtopic($event)
 	{
@@ -131,18 +149,18 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Event: core.posting_modify_template_vars
+	 *
+	 * @param $event
 	 */
 	public function init_topic_review($event)
 	{
-		$this->is_active = $this->cfg('enabled.review_reply');
-		if ($this->is_active)
-		{
-			$this->init();
-		}
+		$this->init($this->cfg('enabled.review_reply'));
 	}
 
 	/**
 	 * Event: core.topic_review_modify_row
+	 *
+	 * @param $event
 	 */
 	public function postnum_in_topic_review($event)
 	{
@@ -157,18 +175,18 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Event: core.mcp_global_f_read_auth_after
+	 *
+	 * @param $event
 	 */
 	public function init_mcp_review($event)
 	{
-		$this->is_active = $this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view';
-		if ($this->is_active)
-		{
-			$this->init();
-		}
+		$this->init($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view');
 	}
 
 	/**
 	 * Event: core.mcp_topic_review_modify_row
+	 *
+	 * @param $event
 	 */
 	public function postnum_in_mcp_review($event)
 	{
@@ -183,6 +201,16 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Returns the post number/ID of the $row
+	 *
+	 * @param string $default_sort_by
+	 * @param string $default_sort_dir
+	 * @param int $default_days
+	 * @param array $row
+	 * @param int $approved_posts
+	 * @param int $total_posts
+	 * @param int $start
+	 * @param bool $is_reply_review
+	 * @return bool|int
 	 */
 	protected function get_post_number($default_sort_by, $default_sort_dir, $default_days, $row, $approved_posts, $total_posts, $start, $is_reply_review)
 	{
@@ -205,8 +233,9 @@ class listener implements EventSubscriberInterface
 		// Initialize $first_post_num and $offset on first post
 		if ($this->first_post_num === -1)
 		{
-			// We only need to query the number of previous/non-approved posts in certain situations
 			$need_new_start = false;
+
+			// We only need to query the number of previous/non-approved posts in certain situations
 			if ($is_reply_review || $this->request->variable('st', $default_days) != 0)
 			{
 				$need_new_start = true;
@@ -223,13 +252,14 @@ class listener implements EventSubscriberInterface
 			if ($need_new_start)
 			{
 				$post_count = $this->get_post_count($row['topic_id'], $row['post_time']);
+
 				if ($is_ascending)
 				{
 					$start = $post_count;
 				}
 				else
 				{
-					$total_posts += $start == 0 ? $post_count + 1 - $total_posts : $post_count - $start;
+					$total_posts += $start == 0 ? $post_count - $total_posts + 1 : $post_count - $start;
 				}
 			}
 
@@ -242,19 +272,18 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Injects a post's number into the row's POST_NUMBER and MINI_POST_IMG fields
+	 *
+	 * @param array $post_row
+	 * @param int $post_num
+	 * @return array
 	 */
 	protected function inject_post_num($post_row, $post_num)
 	{
-		if ($this->cfg('location') == 1)
+		$post_row['POSTNUMBER'] = $post_num;
+
+		if ($this->location === 'subject')
 		{
-			$post_row['POST_NUMBER'] = sprintf('<span class="post-number post-number-subject">#%d</span>', $post_num);
-			$post_row['POST_SUBJECT'] = $post_row['POST_NUMBER'] . ' ' . $post_row['POST_SUBJECT'];
-		}
-		else
-		{
-			$post_row['POST_NUMBER'] = sprintf('<span class="post-number post-number-author" title="%s" data-tooltip="%s" data-copy-manually="%s">%s#%d%s</span>', $this->cache['lang_copy_title'], $this->cache['lang_copied'], $this->cache['lang_copy_manually'], $this->cache['bold_open'], $post_num, $this->cache['bold_close']);
-			$href = isset($post_row['U_MINI_POST']) ? $post_row['U_MINI_POST'] : ('#pr' . $post_row['POST_ID']);
-			$post_row['MINI_POST_IMG'] = sprintf('%s</a><a href="%s"> %s ', $post_row['MINI_POST_IMG'], $href, $post_row['POST_NUMBER']);
+			$post_row['POST_SUBJECT'] = '#' . $post_num . ' ' . $post_row['POST_SUBJECT'];
 		}
 
 		return $post_row;
@@ -262,6 +291,10 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Gets the number of approved/all posts in a topic that have been posted before a certain time
+	 *
+	 * @param int $topic_id
+	 * @param int $post_time
+	 * @return int
 	 */
 	protected function get_post_count($topic_id, $post_time)
 	{
@@ -275,7 +308,7 @@ class listener implements EventSubscriberInterface
 			$sql_where[] = 'p.post_visibility = ' . (int) ITEM_APPROVED;
 		}
 
-		$sql = 'SELECT COUNT(*) as count
+		$sql = 'SELECT COUNT(*) AS count
 			FROM ' . POSTS_TABLE . ' p
 			WHERE ' . implode(' AND ', $sql_where);
 		$result = $this->db->sql_query($sql);
@@ -287,6 +320,9 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Quick access to this extension's config values
+	 *
+	 * @param string $key
+	 * @return string
 	 */
 	protected function cfg($key)
 	{
