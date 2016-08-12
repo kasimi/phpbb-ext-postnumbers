@@ -29,6 +29,9 @@ class listener implements EventSubscriberInterface
 	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \rxu\FirstPostOnEveryPage\event\listener */
+	protected $firstPostOnEveryPage;
+
 	/** @var boolean */
 	protected $is_active = false;
 
@@ -44,25 +47,28 @@ class listener implements EventSubscriberInterface
 	/**
  	 * Constructor
 	 *
-	 * @param \phpbb\user							$user
-	 * @param \phpbb\config\config					$config
-	 * @param \phpbb\request\request_interface		$request
-	 * @param \phpbb\template\template				$template
-	 * @param \phpbb\db\driver\driver_interface		$db
+	 * @param \phpbb\user								$user
+	 * @param \phpbb\config\config						$config
+	 * @param \phpbb\request\request_interface			$request
+	 * @param \phpbb\template\template					$template
+	 * @param \phpbb\db\driver\driver_interface			$db
+	 * @param \rxu\FirstPostOnEveryPage\event\listener	$firstPostOnEveryPage
 	 */
 	public function __construct(
-		\phpbb\user									$user,
-		\phpbb\config\config						$config,
-		\phpbb\request\request_interface			$request,
-		\phpbb\template\template					$template,
-		\phpbb\db\driver\driver_interface			$db
+		\phpbb\user										$user,
+		\phpbb\config\config							$config,
+		\phpbb\request\request_interface				$request,
+		\phpbb\template\template						$template,
+		\phpbb\db\driver\driver_interface				$db,
+		\rxu\FirstPostOnEveryPage\event\listener		$firstPostOnEveryPage = null
 	)
 	{
-		$this->user									= $user;
-		$this->config 								= $config;
-		$this->request								= $request;
-		$this->template								= $template;
-		$this->db									= $db;
+		$this->user										= $user;
+		$this->config 									= $config;
+		$this->request									= $request;
+		$this->template									= $template;
+		$this->db										= $db;
+		$this->firstPostOnEveryPage						= $firstPostOnEveryPage;
 	}
 
 	/**
@@ -140,6 +146,14 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->is_active)
 		{
+			// Compatibility with the First Post On Every Page extension by rxu
+			// Remove reference to the listener if the topic we are viewing
+			// doesn't display the topic's first post on every page
+			if ($this->firstPostOnEveryPage !== null && !$event['topic_data']['topic_first_post_show'] && !$event['topic_data']['first_post_always_show'])
+			{
+				$this->firstPostOnEveryPage = null;
+			}
+
 			if ($post_num = $this->get_post_number($this->user->data['user_post_sortby_type'], $this->user->data['user_post_sortby_dir'], $this->user->data['user_post_show_days'], $event['row'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
@@ -225,10 +239,28 @@ class listener implements EventSubscriberInterface
 		//  - we display them only for approved posts and this post is not approved
 		if ($this->request->variable('sk', $default_sort_by) != 't' || $this->cfg('skip_nonapproved') && $row['post_visibility'] != ITEM_APPROVED)
 		{
+			// Compatibility with the First Post On Every Page extension by rxu
+			// If the first post of the current page meets the above criteria, we need to
+			// make sure that the following post isn't labeled as post #1 in the next iteration.
+			$this->firstPostOnEveryPage = null;
+
 			return false;
 		}
 
 		$is_ascending = $this->request->variable('sd', $default_sort_dir) == 'a';
+
+		// Compatibility with the First Post On Every Page extension by rxu
+		if ($this->firstPostOnEveryPage !== null)
+		{
+			$this->firstPostOnEveryPage = null;
+
+			// If posts are sorted ascending, we display #1 on all except the first page.
+			// If posts are sorted descending, we always display #1.
+			if (!$is_ascending || $start != 0)
+			{
+				return 1;
+			}
+		}
 
 		// Initialize $first_post_num and $offset on first post
 		if ($this->first_post_num === -1)

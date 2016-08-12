@@ -7,5 +7,6 @@ services:
             - '@request'
             - '@template'
             - '@dbal.conn'
+            - '@?rxu.FirstPostOnEveryPage.listener'
         tags:
             - { name: event.listener }
