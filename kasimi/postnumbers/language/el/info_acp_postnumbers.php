@@ -5,7 +5,7 @@
  * @package phpBB Extension - Post Numbers
  * Ελληνική μετάφραση [el]
  *
- * @copyright (c) 2016 kasimi
+ * @copyright (c) 2016 kasimi - https://kasimi.net
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */

@@ -2,7 +2,7 @@
  *
  * @package Post Numbers
  * @version 1.1.0
- * @copyright (c) 2016 kasimi
+ * @copyright (c) 2016 kasimi - https://kasimi.net
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
  */
