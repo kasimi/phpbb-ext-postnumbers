@@ -9,12 +9,17 @@
 
 .post-number {
 	float: left;
-	clear: both;
+	font-size: 1em;
+	line-height: 1.2em;
 }
 
-.post-number.author + .author {
+.post-number + .author {
 	float: left;
 	clear: none;
+}
+
+.post-number + .author + * {
+	clear: both;
 }
 
 .post-number.post-number-phpbb31x {
