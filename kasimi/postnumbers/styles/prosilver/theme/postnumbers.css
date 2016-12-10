@@ -7,30 +7,35 @@
  *
  */
 
-.post-number {
+p.post-number {
 	float: left;
+	clear: both;
 	font-size: 1em;
 	line-height: 1.2em;
 }
 
-.post-number + .author {
+p.post-number + .author {
 	float: left;
 	clear: none;
 }
 
-.post-number + .author + * {
+p.post-number + .author + * {
 	clear: both;
 }
 
-.post-number.post-number-phpbb31x {
+p.post-number.post-number-phpbb31x {
 	margin-right: 2px;
 }
 
-.post-number.post-number-phpbb32x {
+p.post-number.post-number-phpbb32x {
 	margin-right: 6px;
 }
 
-.post-number.post-number-bold {
+#mcp p.post-number-phpbb32x > a {
+	margin-top: 2px;
+}
+
+p.post-number.post-number-bold {
 	font-weight: bold;
 }
 
