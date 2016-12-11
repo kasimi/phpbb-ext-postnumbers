@@ -2,8 +2,8 @@
 // <![CDATA[
 	var postNumbers = {
 		lang: {
-			copied			: '{LA_POSTNUMBERS_COPIED}',
-			copyManually	: '{LA_POSTNUMBERS_COPY_MANUALLY}'
+			copied			: '{{ lang('POSTNUMBERS_COPIED') | escape('js') }}',
+			copyManually	: '{{ lang('POSTNUMBERS_COPY_MANUALLY') | escape('js') }}'
 		}
 	};
 // ]]>
