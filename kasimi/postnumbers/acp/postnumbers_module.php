@@ -14,11 +14,21 @@ class postnumbers_module
 {
 	public $u_action;
 
+	private $config_keys = array(
+		'enabled.viewtopic',
+		'enabled.review_reply',
+		'enabled.review_mcp',
+		'skip_nonapproved',
+		'display_ids',
+		'location',
+		'clipboard',
+		'bold',
+	);
+
 	function main($id, $mode)
 	{
 		global $config, $request, $template, $user, $phpbb_log;
 
-		$user->add_lang('acp/common');
 		$this->tpl_name = 'acp_postnumbers';
 		$this->page_title = $user->lang('POSTNUMBERS_TITLE');
 
@@ -31,14 +41,11 @@ class postnumbers_module
 				trigger_error($user->lang('FORM_INVALID') . adm_back_link($this->u_action));
 			}
 
-			$config->set('kasimi.postnumbers.enabled.viewtopic', $request->variable('postnumbers_enabled_viewtopic', 0));
-			$config->set('kasimi.postnumbers.enabled.review_reply', $request->variable('postnumbers_enabled_review_reply', 0));
-			$config->set('kasimi.postnumbers.enabled.review_mcp', $request->variable('postnumbers_enabled_review_mcp', 0));
-			$config->set('kasimi.postnumbers.skip_nonapproved', $request->variable('postnumbers_skip_nonapproved', 0));
-			$config->set('kasimi.postnumbers.display_ids', $request->variable('postnumbers_display_ids', 0));
-			$config->set('kasimi.postnumbers.location', $request->variable('postnumbers_location', 0));
-			$config->set('kasimi.postnumbers.clipboard', $request->variable('postnumbers_clipboard', 0));
-			$config->set('kasimi.postnumbers.bold', $request->variable('postnumbers_bold', 0));
+			foreach ($this->config_keys as $config_key)
+			{
+				$request_key = 'postnumbers_' . str_replace('.', '_', $config_key);
+				$config->set('kasimi.postnumbers.' . $config_key, $request->variable($request_key, 0));
+			}
 
 			$user_id = (empty($user->data)) ? ANONYMOUS : $user->data['user_id'];
 			$user_ip = (empty($user->ip)) ? '' : $user->ip;
@@ -47,17 +54,17 @@ class postnumbers_module
 			trigger_error($user->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 
-		$template->assign_vars(array(
+		$template_data = array(
 			'POSTNUMBERS_VERSION'				=> '1.1.1',
-			'POSTNUMBERS_ENABLED_VIEWTOPIC'		=> $config['kasimi.postnumbers.enabled.viewtopic'],
-			'POSTNUMBERS_ENABLED_REVIEW_REPLY'	=> $config['kasimi.postnumbers.enabled.review_reply'],
-			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> $config['kasimi.postnumbers.enabled.review_mcp'],
-			'POSTNUMBERS_SKIP_NONAPPROVED'		=> $config['kasimi.postnumbers.skip_nonapproved'],
-			'POSTNUMBERS_DISPLAY_IDS'			=> $config['kasimi.postnumbers.display_ids'],
-			'POSTNUMBERS_LOCATION'				=> $config['kasimi.postnumbers.location'],
-			'POSTNUMBERS_CLIPBOARD'				=> $config['kasimi.postnumbers.clipboard'],
-			'POSTNUMBERS_BOLD'					=> $config['kasimi.postnumbers.bold'],
 			'U_ACTION'							=> $this->u_action,
-		));
+		);
+
+		foreach ($this->config_keys as $config_key)
+		{
+			$template_key = 'POSTNUMBERS_' . strtoupper(str_replace('.', '_', $config_key));
+			$template_data[$template_key] = $config['kasimi.postnumbers.' . $config_key];
+		}
+
+		$template->assign_vars($template_data);
 	}
 }
