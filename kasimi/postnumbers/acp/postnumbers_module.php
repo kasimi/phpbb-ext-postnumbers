@@ -43,19 +43,20 @@ class postnumbers_module
 			$user_id = (empty($user->data)) ? ANONYMOUS : $user->data['user_id'];
 			$user_ip = (empty($user->ip)) ? '' : $user->ip;
 			$phpbb_log->add('admin', $user_id, $user_ip, 'POSTNUMBERS_CONFIG_UPDATED');
+
 			trigger_error($user->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 
 		$template->assign_vars(array(
 			'POSTNUMBERS_VERSION'				=> '1.1.1',
-			'POSTNUMBERS_ENABLED_VIEWTOPIC'		=> isset($config['kasimi.postnumbers.enabled.viewtopic']) ? $config['kasimi.postnumbers.enabled.viewtopic'] : 0,
-			'POSTNUMBERS_ENABLED_REVIEW_REPLY'	=> isset($config['kasimi.postnumbers.enabled.review_reply']) ? $config['kasimi.postnumbers.enabled.review_reply'] : 0,
-			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> isset($config['kasimi.postnumbers.enabled.review_mcp']) ? $config['kasimi.postnumbers.enabled.review_mcp'] : 0,
-			'POSTNUMBERS_SKIP_NONAPPROVED'		=> isset($config['kasimi.postnumbers.skip_nonapproved']) ? $config['kasimi.postnumbers.skip_nonapproved'] : 0,
-			'POSTNUMBERS_DISPLAY_IDS'			=> isset($config['kasimi.postnumbers.display_ids']) ? $config['kasimi.postnumbers.display_ids'] : 0,
-			'POSTNUMBERS_LOCATION'				=> isset($config['kasimi.postnumbers.location']) ? $config['kasimi.postnumbers.location'] : 0,
-			'POSTNUMBERS_CLIPBOARD'				=> isset($config['kasimi.postnumbers.clipboard']) ? $config['kasimi.postnumbers.clipboard'] : 0,
-			'POSTNUMBERS_BOLD'					=> isset($config['kasimi.postnumbers.bold']) ? $config['kasimi.postnumbers.bold'] : 0,
+			'POSTNUMBERS_ENABLED_VIEWTOPIC'		=> $config['kasimi.postnumbers.enabled.viewtopic'],
+			'POSTNUMBERS_ENABLED_REVIEW_REPLY'	=> $config['kasimi.postnumbers.enabled.review_reply'],
+			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> $config['kasimi.postnumbers.enabled.review_mcp'],
+			'POSTNUMBERS_SKIP_NONAPPROVED'		=> $config['kasimi.postnumbers.skip_nonapproved'],
+			'POSTNUMBERS_DISPLAY_IDS'			=> $config['kasimi.postnumbers.display_ids'],
+			'POSTNUMBERS_LOCATION'				=> $config['kasimi.postnumbers.location'],
+			'POSTNUMBERS_CLIPBOARD'				=> $config['kasimi.postnumbers.clipboard'],
+			'POSTNUMBERS_BOLD'					=> $config['kasimi.postnumbers.bold'],
 			'U_ACTION'							=> $this->u_action,
 		));
 	}
