@@ -38,11 +38,13 @@ jQuery(function($) {
 	// Tooltip plugin
 	$.fn.tooltip = function(o) {
 		return this.each(function() {
-			var $this = $(this);
 			var $container = $('<div class="tooltip-container"><div class="tooltip-pointer"><div class="tooltip-text">' + o.text + '</div></div></div>');
 			$container
-				.insertBefore($this)
-				.css('margin-left', $this.position().left + $this.width() / 2 - $container.width() / 2 + 'px')
+				.appendTo(this)
+				.css({
+					'margin-top': '-=' + ($container.height() - this.offsetHeight / 2) + 'px',
+					'margin-left': '+=' + this.offsetWidth  + 'px'
+				})
 				.fadeIn(o.speedIn, function() {
 					setTimeout(function() {
 						$container.fadeOut(o.speedOut, function() {

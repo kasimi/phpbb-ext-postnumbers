@@ -24,7 +24,7 @@ p.post-number + .author + * {
 }
 
 p.post-number.post-number-phpbb31x {
-	margin-right: 2px;
+	margin-right: 3px;
 }
 
 p.post-number.post-number-phpbb32x {
@@ -42,7 +42,7 @@ p.post-number.post-number-bold {
 .tooltip-container {
 	display: none;
 	position: absolute;
-	margin-top: -30px;
+	margin-left: 6px;
 	z-index: 1000;
 }
 
@@ -58,26 +58,26 @@ p.post-number.post-number-bold {
 	border: 1px solid #BBB;
 }
 
-.tooltip-pointer:after, .tooltip-pointer:before {
+.tooltip-pointer:before,
+.tooltip-pointer:after {
 	content: '';
 	position: absolute;
 	pointer-events: none;
 	border: solid transparent;
-	top: 100%;
+	top: 50%;
+	right: 100%;
 	height: 0;
 	width: 0;
 }
 
 .tooltip-pointer:before {
-	left: 50%;
+	border-right-color: #BBB;
 	border-width: 7px;
-	margin-left: -7px;
-	border-top-color: #BBB;
+	margin-top: -7px;
 }
 
 .tooltip-pointer:after {
-	left: 50%;
+	border-right-color: #FFF;
 	border-width: 6px;
-	margin-left: -6px;
-	border-top-color: #FFF;
+	margin-top: -6px;
 }
