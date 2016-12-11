@@ -47,7 +47,7 @@ class postnumbers_module
 		}
 
 		$template->assign_vars(array(
-			'POSTNUMBERS_VERSION'				=> isset($config['kasimi.postnumbers.version']) ? $config['kasimi.postnumbers.version'] : 'X.Y.Z',
+			'POSTNUMBERS_VERSION'				=> '1.1.1',
 			'POSTNUMBERS_ENABLED_VIEWTOPIC'		=> isset($config['kasimi.postnumbers.enabled.viewtopic']) ? $config['kasimi.postnumbers.enabled.viewtopic'] : 0,
 			'POSTNUMBERS_ENABLED_REVIEW_REPLY'	=> isset($config['kasimi.postnumbers.enabled.review_reply']) ? $config['kasimi.postnumbers.enabled.review_reply'] : 0,
 			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> isset($config['kasimi.postnumbers.enabled.review_mcp']) ? $config['kasimi.postnumbers.enabled.review_mcp'] : 0,
