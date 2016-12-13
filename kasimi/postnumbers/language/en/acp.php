@@ -30,7 +30,7 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_LOCATION_AUTHOR'			=> 'Before post image and post author name',
 	'POSTNUMBERS_LOCATION_SUBJECT'			=> 'In post subject',
 	'POSTNUMBERS_CLIPBOARD'					=> 'Copy post link to clipboard when clicking on post number',
-	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Only relevant if post numbers are displayed before post image and post author name. Only works in modern browsers, at least: Chrome 42, Firefox 41, IE 9, Opera 29. Safari is not supported. Unsupported browsers display a prompt containing the post link instead.',
+	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Only relevant if post numbers are displayed before post image and post author name. Only works in modern browsers, at least: Chrome 43, Firefox 41, IE 9, Opera 29, Safari 10. Unsupported browsers display a prompt containing the post link instead.',
 	'POSTNUMBERS_BOLD'						=> 'Make post numbers/IDs bold',
 	'POSTNUMBERS_BOLD_EXP'					=> 'Only relevant if post numbers are displayed before post image and post author name.',
 ));
