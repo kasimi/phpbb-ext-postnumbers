@@ -10,17 +10,11 @@
 p.post-number {
 	float: left;
 	clear: both;
-	font-size: 1em;
-	line-height: 1.2em;
 }
 
 p.post-number + .author {
 	float: left;
 	clear: none;
-}
-
-p.post-number + .author + * {
-	clear: both;
 }
 
 p.post-number.post-number-phpbb31x {
@@ -80,4 +74,9 @@ p.post-number.post-number-bold {
 	border-right-color: #FFF;
 	border-width: 6px;
 	margin-top: -6px;
+}
+
+/* Compatibility with the Quickedit extension by Marc */
+#quickeditbox fieldset {
+	clear: both;
 }
