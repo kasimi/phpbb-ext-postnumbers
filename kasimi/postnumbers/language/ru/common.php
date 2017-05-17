@@ -22,5 +22,5 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'POSTNUMBERS_COPY_TITLE'		=> 'Копировать ссылку  на сообщение в буфер обмена',
 	'POSTNUMBERS_COPY_MANUALLY'		=> 'Копировать в буфер обмена: Ctrl/Cmd+C, Enter',
-	'POSTNUMBERS_COPIED'			=> 'Скопированно!',
+	'POSTNUMBERS_COPIED'			=> 'Скопировано!',
 ));
