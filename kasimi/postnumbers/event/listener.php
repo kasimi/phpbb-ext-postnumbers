@@ -14,6 +14,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
 {
+	const PAGE_VIEWTOPIC	= 'viewtopic';
+	const PAGE_REVIEW_REPLY	= 'review_reply';
+	const PAGE_REVIEW_MCP	= 'review_mcp';
+
 	/* @var \phpbb\user */
 	protected $user;
 
@@ -34,6 +38,9 @@ class listener implements EventSubscriberInterface
 
 	/** @var boolean */
 	protected $is_active = false;
+
+	/** @var string */
+	protected $page;
 
 	/** @var string */
 	protected $location;
@@ -89,11 +96,13 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Prepare template data
 	 *
-	 * @param bool $is_active
+	 * @param string $mode
 	 */
-	protected function init($is_active)
+	protected function init($mode)
 	{
-		if (!($this->is_active = $is_active))
+		$this->is_active = $this->cfg('enabled.' . $mode) && !$this->user->data['is_bot'];
+
+		if (!$this->is_active)
 		{
 			return;
 		}
@@ -134,7 +143,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function init_viewtopic($event)
 	{
-		$this->init($this->cfg('enabled.viewtopic') && !$this->user->data['is_bot']);
+		$this->init(self::PAGE_VIEWTOPIC);
 	}
 
 	/**
@@ -154,7 +163,7 @@ class listener implements EventSubscriberInterface
 				$this->firstPostOnEveryPage = null;
 			}
 
-			if ($post_num = $this->get_post_number($this->user->data['user_post_sortby_type'], $this->user->data['user_post_sortby_dir'], $this->user->data['user_post_show_days'], $event['row'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start'], false))
+			if ($post_num = $this->get_post_number($this->user->data['user_post_sortby_type'], $this->user->data['user_post_sortby_dir'], $this->user->data['user_post_show_days'], $event['row'], $event['topic_data']['topic_posts_approved'], $event['total_posts'], $event['start']))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -168,7 +177,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function init_topic_review($event)
 	{
-		$this->init($this->cfg('enabled.review_reply'));
+		$this->init(self::PAGE_REVIEW_REPLY);
 	}
 
 	/**
@@ -180,7 +189,7 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->is_active && $event['mode'] == 'topic_review')
 		{
-			if ($post_num = $this->get_post_number('t', 'd', 0, $event['row'], $event['total_posts'], $event['total_posts'], $event['start'], true))
+			if ($post_num = $this->get_post_number('t', 'd', 0, $event['row'], $event['total_posts'], $event['total_posts'], $event['start']))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -194,7 +203,10 @@ class listener implements EventSubscriberInterface
 	 */
 	public function init_mcp_review($event)
 	{
-		$this->init($this->cfg('enabled.review_mcp') && $event['mode'] == 'topic_view');
+		if ($event['mode'] == 'topic_view')
+		{
+			$this->init(self::PAGE_REVIEW_MCP);
+		}
 	}
 
 	/**
@@ -206,7 +218,7 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->is_active)
 		{
-			if ($post_num = $this->get_post_number('t', 'a', 0, $event['row'], $event['topic_info']['topic_posts_approved'], $event['total'], $event['start'], false))
+			if ($post_num = $this->get_post_number('t', 'a', 0, $event['row'], $event['topic_info']['topic_posts_approved'], $event['total'], $event['start']))
 			{
 				$event['post_row'] = $this->inject_post_num($event['post_row'], $post_num);
 			}
@@ -223,10 +235,9 @@ class listener implements EventSubscriberInterface
 	 * @param int $approved_posts
 	 * @param int $total_posts
 	 * @param int $start
-	 * @param bool $is_reply_review
 	 * @return bool|int
 	 */
-	protected function get_post_number($default_sort_by, $default_sort_dir, $default_days, $row, $approved_posts, $total_posts, $start, $is_reply_review)
+	protected function get_post_number($default_sort_by, $default_sort_dir, $default_days, $row, $approved_posts, $total_posts, $start)
 	{
 		// If we display IDs, skip all checks and calculations and return immediately
 		if ($this->cfg('display_ids'))
@@ -254,11 +265,15 @@ class listener implements EventSubscriberInterface
 		{
 			$this->firstPostOnEveryPage = null;
 
-			// If posts are sorted ascending, we display #1 on all except the first page.
-			// If posts are sorted descending, we always display #1.
-			if (!$is_ascending || $start != 0)
+			// First Post On Every Page extension is only active on viewtopic
+			if ($this->page === self::PAGE_VIEWTOPIC)
 			{
-				return 1;
+				// If posts are sorted ascending, we display #1 on all except the first page.
+				// If posts are sorted descending, we always display #1.
+				if (!$is_ascending || $start != 0)
+				{
+					return 1;
+				}
 			}
 		}
 
@@ -268,7 +283,7 @@ class listener implements EventSubscriberInterface
 			$need_new_start = false;
 
 			// We only need to query the number of previous/non-approved posts in certain situations
-			if ($is_reply_review || $this->request->variable('st', $default_days) != 0)
+			if ($this->page === self::PAGE_REVIEW_REPLY || $this->request->variable('st', $default_days) != 0)
 			{
 				$need_new_start = true;
 			}
