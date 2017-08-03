@@ -12,6 +12,7 @@ namespace kasimi\postnumbers\event;
 
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface as db_interface;
+use phpbb\event\data;
 use phpbb\request\request_interface;
 use phpbb\template\template;
 use phpbb\user;
@@ -146,10 +147,8 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Event: core.viewtopic_assign_template_vars_before
-	 *
-	 * @param $event
 	 */
-	public function init_viewtopic($event)
+	public function init_viewtopic()
 	{
 		$this->init(self::PAGE_VIEWTOPIC);
 	}
@@ -157,7 +156,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Event: core.viewtopic_modify_post_row
 	 *
-	 * @param $event
+	 * @param data $event
 	 */
 	public function postnum_in_viewtopic($event)
 	{
@@ -180,10 +179,8 @@ class listener implements EventSubscriberInterface
 
 	/**
 	 * Event: core.posting_modify_template_vars
-	 *
-	 * @param $event
 	 */
-	public function init_topic_review($event)
+	public function init_topic_review()
 	{
 		$this->init(self::PAGE_REVIEW_REPLY);
 	}
@@ -191,7 +188,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Event: core.topic_review_modify_row
 	 *
-	 * @param $event
+	 * @param data $event
 	 */
 	public function postnum_in_topic_review($event)
 	{
@@ -207,7 +204,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Event: core.mcp_global_f_read_auth_after
 	 *
-	 * @param $event
+	 * @param data $event
 	 */
 	public function init_mcp_review($event)
 	{
@@ -220,7 +217,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Event: core.mcp_topic_review_modify_row
 	 *
-	 * @param $event
+	 * @param data $event
 	 */
 	public function postnum_in_mcp_review($event)
 	{
