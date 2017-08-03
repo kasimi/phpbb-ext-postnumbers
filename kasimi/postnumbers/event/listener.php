@@ -10,6 +10,12 @@
 
 namespace kasimi\postnumbers\event;
 
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface as db_interface;
+use phpbb\request\request_interface;
+use phpbb\template\template;
+use phpbb\user;
+use rxu\FirstPostOnEveryPage\event\listener as FirstPostOnEveryPage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
@@ -18,22 +24,22 @@ class listener implements EventSubscriberInterface
 	const PAGE_REVIEW_REPLY	= 'review_reply';
 	const PAGE_REVIEW_MCP	= 'review_mcp';
 
-	/* @var \phpbb\user */
+	/* @var user */
 	protected $user;
 
-	/* @var \phpbb\config\config */
+	/* @var config */
 	protected $config;
 
-	/** @var \phpbb\request\request_interface */
+	/** @var request_interface */
 	protected $request;
 
-	/* @var \phpbb\template\template */
+	/* @var template */
 	protected $template;
 
-	/* @var \phpbb\db\driver\driver_interface */
+	/* @var db_interface */
 	protected $db;
 
-	/** @var \rxu\FirstPostOnEveryPage\event\listener */
+	/** @var FirstPostOnEveryPage */
 	protected $firstPostOnEveryPage;
 
 	/** @var boolean */
@@ -54,28 +60,28 @@ class listener implements EventSubscriberInterface
 	/**
  	 * Constructor
 	 *
-	 * @param \phpbb\user								$user
-	 * @param \phpbb\config\config						$config
-	 * @param \phpbb\request\request_interface			$request
-	 * @param \phpbb\template\template					$template
-	 * @param \phpbb\db\driver\driver_interface			$db
-	 * @param \rxu\FirstPostOnEveryPage\event\listener	$firstPostOnEveryPage
+	 * @param user					$user
+	 * @param config				$config
+	 * @param request_interface		$request
+	 * @param template				$template
+	 * @param db_interface			$db
+	 * @param FirstPostOnEveryPage	$firstPostOnEveryPage
 	 */
 	public function __construct(
-		\phpbb\user										$user,
-		\phpbb\config\config							$config,
-		\phpbb\request\request_interface				$request,
-		\phpbb\template\template						$template,
-		\phpbb\db\driver\driver_interface				$db,
-		\rxu\FirstPostOnEveryPage\event\listener		$firstPostOnEveryPage = null
+		user $user,
+		config $config,
+		request_interface $request,
+		template $template,
+		db_interface $db,
+		FirstPostOnEveryPage $firstPostOnEveryPage = null
 	)
 	{
-		$this->user										= $user;
-		$this->config 									= $config;
-		$this->request									= $request;
-		$this->template									= $template;
-		$this->db										= $db;
-		$this->firstPostOnEveryPage						= $firstPostOnEveryPage;
+		$this->user					= $user;
+		$this->config 				= $config;
+		$this->request				= $request;
+		$this->template				= $template;
+		$this->db					= $db;
+		$this->firstPostOnEveryPage	= $firstPostOnEveryPage;
 	}
 
 	/**
