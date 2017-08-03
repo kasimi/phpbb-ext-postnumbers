@@ -40,7 +40,6 @@ class v1_0_0 extends \phpbb\db\migration\migration
 				'POSTNUMBERS_TITLE',
 				array(
 					'module_basename'	=> '\kasimi\postnumbers\acp\postnumbers_module',
-					'auth'				=> 'ext_kasimi/postnumbers && acl_a_board',
 					'modes'				=> array('settings'),
 				),
 			)),
