@@ -96,11 +96,13 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Prepare template data
 	 *
-	 * @param string $mode
+	 * @param string $page
 	 */
-	protected function init($mode)
+	protected function init($page)
 	{
-		$this->is_active = $this->cfg('enabled.' . $mode) && !$this->user->data['is_bot'];
+		$this->page = $page;
+
+		$this->is_active = $this->cfg('enabled.' . $page) && !$this->user->data['is_bot'];
 
 		if (!$this->is_active)
 		{
