@@ -4,7 +4,7 @@
     "description": "Adds post numbers (#1, #2, #3 etc.) either at the top of each post after the mini image, or in the post subject. Takes effect in viewtopic, reply and MCP topic review. Can also display post IDs instead. Allows the administrator to enable Copy to Clipboard when clicking on the post number.",
     "homepage": "https://github.com/kasimi",
     "version": "1.1.2",
-    "time": "2017-05-03",
+    "time": "2017-08-05",
     "license": "GPL-2.0",
     "authors": [
         {
