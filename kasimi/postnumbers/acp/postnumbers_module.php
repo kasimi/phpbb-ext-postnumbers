@@ -57,8 +57,7 @@ class postnumbers_module
 		}
 
 		$template_data = array(
-			'POSTNUMBERS_VERSION'	=> '1.1.1',
-			'U_ACTION'				=> $this->u_action,
+			'U_ACTION' => $this->u_action,
 		);
 
 		foreach ($this->config_keys as $config_key)
