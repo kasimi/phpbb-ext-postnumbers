@@ -1,3 +1,3 @@
-<p class="author post-number post-number-phpbb{POSTNUMBERS_PHPBB_VERSION}<!-- IF S_POSTNUMBERS_BOLD --> post-number-bold<!-- ENDIF -->">
-	<a href="{$U_POST}"<!-- IF S_POSTNUMBERS_CLIPBOARD --> title="{L_POSTNUMBERS_COPY_TITLE}"<!-- ENDIF -->>#{$POST_NUMBER}</a>
+<p class="author post-number post-number-phpbb{{ POSTNUMBERS_PHPBB_VERSION }}{% if S_POSTNUMBERS_BOLD %} post-number-bold{% endif %}">
+	<a href="{{ U_POST }}"{% if S_POSTNUMBERS_CLIPBOARD %} title="{{ lang('POSTNUMBERS_COPY_TITLE') }}"{% endif %}>#{{ POST_NUMBER }}</a>
 </p>

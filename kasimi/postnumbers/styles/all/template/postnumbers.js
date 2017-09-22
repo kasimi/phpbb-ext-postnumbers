@@ -1,8 +1,7 @@
 /**
  *
  * @package Post Numbers
- * @version 1.1.0
- * @copyright (c) 2016 kasimi
+ * @copyright (c) 2016 kasimi - https://kasimi.net
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
  */
@@ -38,11 +37,13 @@ jQuery(function($) {
 	// Tooltip plugin
 	$.fn.tooltip = function(o) {
 		return this.each(function() {
-			var $this = $(this);
 			var $container = $('<div class="tooltip-container"><div class="tooltip-pointer"><div class="tooltip-text">' + o.text + '</div></div></div>');
 			$container
-				.insertBefore($this)
-				.css('margin-left', $this.position().left + $this.width() / 2 - $container.width() / 2 + 'px')
+				.appendTo(this)
+				.css({
+					'margin-top': '-=' + ($container.height() - this.offsetHeight / 2) + 'px',
+					'margin-left': '+=' + this.offsetWidth  + 'px'
+				})
 				.fadeIn(o.speedIn, function() {
 					setTimeout(function() {
 						$container.fadeOut(o.speedOut, function() {
@@ -80,4 +81,23 @@ jQuery(function($) {
 			}
 		});
 	});
+
+	/**
+	 * Compatibility with the Quickedit extension by Marc
+	 *
+	 * When clicking on a post's Edit icon, the Quickedit extension adds the text
+	 * editor after the .author element. Since the Post Numbers extension adds
+	 * an element that also has this .author CSS class, the editor is added twice.
+	 * This is why we remove the .author CSS class before the Quickedit extension
+	 * adds the editor, and add it back afterwards.
+	 */
+	var quickEdit = phpbb.ajaxCallbacks['quickedit_post'];
+	if (quickEdit) {
+		phpbb.addAjaxCallback('quickedit_post', function(res) {
+			var $postNumber = $('#p' + res.POST_ID).find('p.post-number');
+			$postNumber.removeClass('author');
+			quickEdit.apply(this, arguments);
+			$postNumber.addClass('author');
+		});
+	}
 });

@@ -1,5 +1,5 @@
-<!-- IF S_POSTNUMBERS_LOCATION == 'post_img' and postrow.POSTNUMBER -->
-	<!-- DEFINE $U_POST = postrow.U_MINI_POST -->
-	<!-- DEFINE $POST_NUMBER = postrow.POSTNUMBER -->
-	<!-- INCLUDE post_number.html -->
-<!-- ENDIF -->
+{% if S_POSTNUMBERS_LOCATION == 'post_img' and postrow.POSTNUMBER %}
+	{% set U_POST = postrow.U_MINI_POST ~ '#pr' ~ postrow.POST_ID %}
+	{% set POST_NUMBER = postrow.POSTNUMBER %}
+	{% include '@kasimi_postnumbers/post_number.html' %}
+{% endif %}

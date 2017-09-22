@@ -3,7 +3,7 @@
 /**
  *
  * @package phpBB Extension - Post Numbers
- * @copyright (c) 2016 kasimi
+ * @copyright (c) 2016 kasimi - https://kasimi.net
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
@@ -40,7 +40,6 @@ class v1_0_0 extends \phpbb\db\migration\migration
 				'POSTNUMBERS_TITLE',
 				array(
 					'module_basename'	=> '\kasimi\postnumbers\acp\postnumbers_module',
-					'auth'				=> 'ext_kasimi/postnumbers && acl_a_board',
 					'modes'				=> array('settings'),
 				),
 			)),

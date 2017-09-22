@@ -3,7 +3,7 @@
 /**
  *
  * @package phpBB Extension - Post Numbers
- * @copyright (c) 2016 kasimi
+ * @copyright (c) 2016 kasimi - https://kasimi.net
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
@@ -14,11 +14,23 @@ class postnumbers_module
 {
 	public $u_action;
 
+	private $config_keys = array(
+		'enabled.viewtopic',
+		'enabled.review_reply',
+		'enabled.review_mcp',
+		'skip_nonapproved',
+		'display_ids',
+		'location',
+		'clipboard',
+		'bold',
+	);
+
 	function main($id, $mode)
 	{
 		global $config, $request, $template, $user, $phpbb_log;
 
-		$user->add_lang('acp/common');
+		$user->add_lang_ext('kasimi/postnumbers', 'acp');
+
 		$this->tpl_name = 'acp_postnumbers';
 		$this->page_title = $user->lang('POSTNUMBERS_TITLE');
 
@@ -31,32 +43,29 @@ class postnumbers_module
 				trigger_error($user->lang('FORM_INVALID') . adm_back_link($this->u_action));
 			}
 
-			$config->set('kasimi.postnumbers.enabled.viewtopic', $request->variable('postnumbers_enabled_viewtopic', 0));
-			$config->set('kasimi.postnumbers.enabled.review_reply', $request->variable('postnumbers_enabled_review_reply', 0));
-			$config->set('kasimi.postnumbers.enabled.review_mcp', $request->variable('postnumbers_enabled_review_mcp', 0));
-			$config->set('kasimi.postnumbers.skip_nonapproved', $request->variable('postnumbers_skip_nonapproved', 0));
-			$config->set('kasimi.postnumbers.display_ids', $request->variable('postnumbers_display_ids', 0));
-			$config->set('kasimi.postnumbers.location', $request->variable('postnumbers_location', 0));
-			$config->set('kasimi.postnumbers.clipboard', $request->variable('postnumbers_clipboard', 0));
-			$config->set('kasimi.postnumbers.bold', $request->variable('postnumbers_bold', 0));
+			foreach ($this->config_keys as $config_key)
+			{
+				$request_key = 'postnumbers_' . str_replace('.', '_', $config_key);
+				$config->set('kasimi.postnumbers.' . $config_key, $request->variable($request_key, 0));
+			}
 
 			$user_id = (empty($user->data)) ? ANONYMOUS : $user->data['user_id'];
 			$user_ip = (empty($user->ip)) ? '' : $user->ip;
 			$phpbb_log->add('admin', $user_id, $user_ip, 'POSTNUMBERS_CONFIG_UPDATED');
+
 			trigger_error($user->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 
-		$template->assign_vars(array(
-			'POSTNUMBERS_VERSION'				=> isset($config['kasimi.postnumbers.version']) ? $config['kasimi.postnumbers.version'] : 'X.Y.Z',
-			'POSTNUMBERS_ENABLED_VIEWTOPIC'		=> isset($config['kasimi.postnumbers.enabled.viewtopic']) ? $config['kasimi.postnumbers.enabled.viewtopic'] : 0,
-			'POSTNUMBERS_ENABLED_REVIEW_REPLY'	=> isset($config['kasimi.postnumbers.enabled.review_reply']) ? $config['kasimi.postnumbers.enabled.review_reply'] : 0,
-			'POSTNUMBERS_ENABLED_REVIEW_MCP'	=> isset($config['kasimi.postnumbers.enabled.review_mcp']) ? $config['kasimi.postnumbers.enabled.review_mcp'] : 0,
-			'POSTNUMBERS_SKIP_NONAPPROVED'		=> isset($config['kasimi.postnumbers.skip_nonapproved']) ? $config['kasimi.postnumbers.skip_nonapproved'] : 0,
-			'POSTNUMBERS_DISPLAY_IDS'			=> isset($config['kasimi.postnumbers.display_ids']) ? $config['kasimi.postnumbers.display_ids'] : 0,
-			'POSTNUMBERS_LOCATION'				=> isset($config['kasimi.postnumbers.location']) ? $config['kasimi.postnumbers.location'] : 0,
-			'POSTNUMBERS_CLIPBOARD'				=> isset($config['kasimi.postnumbers.clipboard']) ? $config['kasimi.postnumbers.clipboard'] : 0,
-			'POSTNUMBERS_BOLD'					=> isset($config['kasimi.postnumbers.bold']) ? $config['kasimi.postnumbers.bold'] : 0,
-			'U_ACTION'							=> $this->u_action,
-		));
+		$template_data = array(
+			'U_ACTION' => $this->u_action,
+		);
+
+		foreach ($this->config_keys as $config_key)
+		{
+			$template_key = 'POSTNUMBERS_' . strtoupper(str_replace('.', '_', $config_key));
+			$template_data[$template_key] = $config['kasimi.postnumbers.' . $config_key];
+		}
+
+		$template->assign_vars($template_data);
 	}
 }

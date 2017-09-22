@@ -1,5 +1,5 @@
-<!-- IF S_POSTNUMBERS_LOCATION == 'post_img' and topic_review_row.POSTNUMBER -->
-	<!-- DEFINE $U_POST = topic_review_row.U_MINI_POST -->
-	<!-- DEFINE $POST_NUMBER = topic_review_row.POSTNUMBER -->
-	<!-- INCLUDE post_number.html -->
-<!-- ENDIF -->
+{% if S_POSTNUMBERS_LOCATION == 'post_img' and topic_review_row.POSTNUMBER %}
+	{% set U_POST = topic_review_row.U_MINI_POST %}
+	{% set POST_NUMBER = topic_review_row.POSTNUMBER %}
+	{% include '@kasimi_postnumbers/post_number.html' %}
+{% endif %}
