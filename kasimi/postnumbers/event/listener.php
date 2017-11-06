@@ -17,6 +17,7 @@ use phpbb\request\request_interface;
 use phpbb\template\template;
 use phpbb\user;
 use rxu\FirstPostOnEveryPage\event\listener as FirstPostOnEveryPage;
+use Aurelienazerty\DisplayLastPost\event\listener as DisplayLastPost;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class listener implements EventSubscriberInterface
@@ -42,6 +43,9 @@ class listener implements EventSubscriberInterface
 
 	/** @var FirstPostOnEveryPage */
 	protected $firstPostOnEveryPage;
+	
+	/** @var DisplayLastPost */
+	protected $displayLastPost;
 
 	/** @var boolean */
 	protected $is_active = false;
@@ -67,6 +71,7 @@ class listener implements EventSubscriberInterface
 	 * @param template				$template
 	 * @param db_interface			$db
 	 * @param FirstPostOnEveryPage	$firstPostOnEveryPage
+	 * @param DisplayLastPost $displayLastPost
 	 */
 	public function __construct(
 		user $user,
@@ -74,7 +79,8 @@ class listener implements EventSubscriberInterface
 		request_interface $request,
 		template $template,
 		db_interface $db,
-		FirstPostOnEveryPage $firstPostOnEveryPage = null
+		FirstPostOnEveryPage $firstPostOnEveryPage = null,
+		DisplayLastPost $displayLastPost = null
 	)
 	{
 		$this->user					= $user;
@@ -83,6 +89,7 @@ class listener implements EventSubscriberInterface
 		$this->template				= $template;
 		$this->db					= $db;
 		$this->firstPostOnEveryPage	= $firstPostOnEveryPage;
+		$this->displayLastPost	= $displayLastPost;
 	}
 
 	/**
@@ -319,7 +326,13 @@ class listener implements EventSubscriberInterface
 			$this->offset = $is_ascending ? 1 : 0;
 		}
 
-		return $this->first_post_num + ($is_ascending ? +$this->offset++ : -$this->offset++);
+		$return = $this->first_post_num + ($is_ascending ? +$this->offset++ : -$this->offset++);
+		
+		if ($this->displayLastPost !== null && $start) {
+			$return = $is_ascending ? $return - 1 : $return + 1;
+		}
+		
+		return $return;
 	}
 
 	/**

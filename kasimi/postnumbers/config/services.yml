@@ -8,5 +8,6 @@ services:
             - '@template'
             - '@dbal.conn'
             - '@?rxu.FirstPostOnEveryPage.listener'
+            - '@?Aurelienazerty.DisplayLastPost.listener'
         tags:
             - { name: event.listener }
