@@ -6,6 +6,7 @@ services:
             - '@config'
             - '@request'
             - '@template'
+            - '@ext.manager'
             - '@dbal.conn'
             - '@?rxu.FirstPostOnEveryPage.listener'
         tags:

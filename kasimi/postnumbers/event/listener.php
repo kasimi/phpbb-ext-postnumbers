@@ -13,6 +13,7 @@ namespace kasimi\postnumbers\event;
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\event\data;
+use phpbb\extension\manager as ext_manager;
 use phpbb\request\request_interface;
 use phpbb\template\template;
 use phpbb\user;
@@ -36,6 +37,9 @@ class listener implements EventSubscriberInterface
 
 	/* @var template */
 	protected $template;
+
+	/** @var ext_manager */
+	protected $ext_manager;
 
 	/* @var db_interface */
 	protected $db;
@@ -65,6 +69,7 @@ class listener implements EventSubscriberInterface
 	 * @param config				$config
 	 * @param request_interface		$request
 	 * @param template				$template
+	 * @param ext_manager			$ext_manager
 	 * @param db_interface			$db
 	 * @param FirstPostOnEveryPage	$firstPostOnEveryPage
 	 */
@@ -73,6 +78,7 @@ class listener implements EventSubscriberInterface
 		config $config,
 		request_interface $request,
 		template $template,
+		ext_manager $ext_manager,
 		db_interface $db,
 		FirstPostOnEveryPage $firstPostOnEveryPage = null
 	)
@@ -81,6 +87,7 @@ class listener implements EventSubscriberInterface
 		$this->config 				= $config;
 		$this->request				= $request;
 		$this->template				= $template;
+		$this->ext_manager			= $ext_manager;
 		$this->db					= $db;
 		$this->firstPostOnEveryPage	= $firstPostOnEveryPage;
 	}
@@ -138,6 +145,7 @@ class listener implements EventSubscriberInterface
 			$template_data = array_merge($template_data, array(
 				'S_POSTNUMBERS_CLIPBOARD'		=> $this->cfg('clipboard'),
 				'S_POSTNUMBERS_BOLD'			=> $this->cfg('bold'),
+				'S_POSTNUMBERS_QUICKEDIT'		=> $this->ext_manager->is_enabled('marc/quickedit'),
 				'POSTNUMBERS_PHPBB_VERSION'		=> phpbb_version_compare(PHPBB_VERSION, '3.1.0@dev', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.2.0@dev', '<') ? '31x' : (phpbb_version_compare(PHPBB_VERSION, '3.2.0@dev', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.3.0@dev', '<') ? '32x' : ''),
 			));
 		}

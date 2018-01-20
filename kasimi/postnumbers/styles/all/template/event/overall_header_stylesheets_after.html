@@ -1,3 +1,6 @@
 {% if S_POSTNUMBERS_CLIPBOARD %}
 	{% INCLUDEJS '@kasimi_postnumbers/postnumbers.js' %}
 {% endif %}
+{% if S_POSTNUMBERS_QUICKEDIT %}
+	{% INCLUDEJS '@kasimi_postnumbers/postnumbers.quickedit.js' %}
+{% endif %}
