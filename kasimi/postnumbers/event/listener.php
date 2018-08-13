@@ -328,8 +328,9 @@ class listener implements EventSubscriberInterface
 
 		$return = $this->first_post_num + ($is_ascending ? +$this->offset++ : -$this->offset++);
 		
-		if ($this->displayLastPost !== null && $start) {
-			$return = $is_ascending ? $return - 1 : $return + 1;
+		if ($this->displayLastPost !== null && $this->config['display_last_post_show'] && $start) 
+		{
+				$return = $is_ascending ? $return - 1 : $return + 1;
 		}
 		
 		return $return;
