@@ -89,7 +89,7 @@ class listener implements EventSubscriberInterface
 		$this->template				= $template;
 		$this->db					= $db;
 		$this->firstPostOnEveryPage	= $firstPostOnEveryPage;
-		$this->displayLastPost	= $displayLastPost;
+		$this->displayLastPost		= $displayLastPost;
 	}
 
 	/**
@@ -330,9 +330,9 @@ class listener implements EventSubscriberInterface
 		
 		if ($this->displayLastPost !== null && $this->config['display_last_post_show'] && $start) 
 		{
-				$return = $is_ascending ? $return - 1 : $return + 1;
+			$return = $is_ascending ? $return - 1 : $return + 1;
 		}
-		
+
 		return $return;
 	}
 
