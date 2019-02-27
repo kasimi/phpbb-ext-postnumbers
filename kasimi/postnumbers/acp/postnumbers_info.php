@@ -21,7 +21,7 @@ class postnumbers_info
 				'settings' => [
 					'title'	=> 'POSTNUMBERS_CONFIG',
 					'auth'	=> 'ext_kasimi/postnumbers && acl_a_board',
-					'cat'	=> ['POSTNUMBERS_TITLE']
+					'cat'	=> ['POSTNUMBERS_TITLE'],
 				],
 			],
 		];

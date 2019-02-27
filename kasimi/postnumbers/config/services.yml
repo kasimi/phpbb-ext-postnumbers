@@ -12,3 +12,13 @@ services:
             - '@?rxu.FirstPostOnEveryPage.listener'
         tags:
             - { name: 'event.listener' }
+
+    kasimi.postnumbers.controller.acp:
+        class: 'kasimi\postnumbers\controller\acp'
+        arguments:
+            - '@user'
+            - '@language'
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@log'
