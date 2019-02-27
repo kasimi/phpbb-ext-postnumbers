@@ -1,8 +1,9 @@
 services:
     kasimi.postnumbers.listener:
-        class: kasimi\postnumbers\event\listener
+        class: 'kasimi\postnumbers\event\listener'
         arguments:
             - '@user'
+            - '@language'
             - '@config'
             - '@request'
             - '@template'
@@ -10,4 +11,4 @@ services:
             - '@dbal.conn'
             - '@?rxu.FirstPostOnEveryPage.listener'
         tags:
-            - { name: event.listener }
+            - { name: 'event.listener' }

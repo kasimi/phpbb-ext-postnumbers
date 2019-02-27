@@ -14,6 +14,7 @@ use phpbb\config\config;
 use phpbb\db\driver\driver_interface as db_interface;
 use phpbb\event\data;
 use phpbb\extension\manager as ext_manager;
+use phpbb\language\language;
 use phpbb\request\request_interface;
 use phpbb\template\template;
 use phpbb\user;
@@ -28,6 +29,9 @@ class listener implements EventSubscriberInterface
 
 	/* @var user */
 	protected $user;
+
+	/** @var language */
+	protected $lang;
 
 	/* @var config */
 	protected $config;
@@ -66,6 +70,7 @@ class listener implements EventSubscriberInterface
  	 * Constructor
 	 *
 	 * @param user					$user
+	 * @param language				$lang
 	 * @param config				$config
 	 * @param request_interface		$request
 	 * @param template				$template
@@ -75,6 +80,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function __construct(
 		user $user,
+		language $lang,
 		config $config,
 		request_interface $request,
 		template $template,
@@ -84,6 +90,7 @@ class listener implements EventSubscriberInterface
 	)
 	{
 		$this->user					= $user;
+		$this->lang					= $lang;
 		$this->config 				= $config;
 		$this->request				= $request;
 		$this->template				= $template;
@@ -140,7 +147,7 @@ class listener implements EventSubscriberInterface
 
 		if ($this->location === 'post_img')
 		{
-			$this->user->add_lang_ext('kasimi/postnumbers', 'common');
+			$this->lang->add_lang('common', 'kasimi/postnumbers');
 
 			$template_data = array_merge($template_data, [
 				'S_POSTNUMBERS_CLIPBOARD'		=> $this->cfg('clipboard'),
