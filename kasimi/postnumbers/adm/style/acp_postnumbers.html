@@ -45,9 +45,9 @@
 			<dt><label for="postnumbers_location">{{ lang('POSTNUMBERS_LOCATION') ~ lang('COLON') }}</label></dt>
 			<dd>
 				<select id="postnumbers_location" name="postnumbers_location">
-					<option value="0"{% if POSTNUMBERS_LOCATION == 0 %} selected{% endif %}>{{ lang('POSTNUMBERS_LOCATION_AUTHOR') }}</option>
-					<option value="1"{% if POSTNUMBERS_LOCATION == 1 %} selected{% endif %}>{{ lang('POSTNUMBERS_LOCATION_BEFORE_SUBJECT') }}</option>
-					<option value="2"{% if POSTNUMBERS_LOCATION == 2 %} selected{% endif %}>{{ lang('POSTNUMBERS_LOCATION_SUBJECT') }}</option>
+					<option value="0"{{ POSTNUMBERS_LOCATION == 0 ? ' selected' }}>{{ lang('POSTNUMBERS_LOCATION_AUTHOR') }}</option>
+					<option value="1"{{ POSTNUMBERS_LOCATION == 1 ? ' selected' }}>{{ lang('POSTNUMBERS_LOCATION_BEFORE_SUBJECT') }}</option>
+					<option value="2"{{ POSTNUMBERS_LOCATION == 2 ? ' selected' }}>{{ lang('POSTNUMBERS_LOCATION_SUBJECT') }}</option>
 				</select>
 			</dd>
 		</dl>
