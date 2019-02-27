@@ -14,16 +14,16 @@ class postnumbers_info
 {
 	function module()
 	{
-		return array(
+		return [
 			'filename'	=> '\kasimi\postnumbers\acp\postnumbers_module',
 			'title'		=> 'POSTNUMBERS_TITLE',
-			'modes'		=> array(
-				'settings' => array(
+			'modes'		=> [
+				'settings' => [
 					'title'	=> 'POSTNUMBERS_CONFIG',
 					'auth'	=> 'ext_kasimi/postnumbers && acl_a_board',
-					'cat'	=> array('POSTNUMBERS_TITLE')
-				),
-			),
-		);
+					'cat'	=> ['POSTNUMBERS_TITLE']
+				],
+			],
+		];
 	}
 }

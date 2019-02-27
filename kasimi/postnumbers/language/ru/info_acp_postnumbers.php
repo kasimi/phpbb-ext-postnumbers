@@ -16,11 +16,11 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_TITLE'						=> 'Номер сообщения',
 	'POSTNUMBERS_CONFIG'					=> 'Настройки',
 	'POSTNUMBERS_CONFIG_UPDATED'			=> '<strong>Номер сообщения</strong>Добавить<br />» Настройки обновления',
-));
+]);

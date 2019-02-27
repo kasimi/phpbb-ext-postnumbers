@@ -97,14 +97,14 @@ class listener implements EventSubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.viewtopic_assign_template_vars_before'	=> 'init_viewtopic',
 			'core.viewtopic_modify_post_row'				=> 'postnum_in_viewtopic',
 			'core.posting_modify_template_vars'				=> 'init_topic_review',
 			'core.topic_review_modify_row'					=> 'postnum_in_topic_review',
 			'core.mcp_global_f_read_auth_after'				=> 'init_mcp_review',
 			'core.mcp_topic_review_modify_row'				=> 'postnum_in_mcp_review',
-		);
+		];
 	}
 
 	/**
@@ -134,20 +134,20 @@ class listener implements EventSubscriberInterface
 			break;
 		}
 
-		$template_data = array(
+		$template_data = [
 			'S_POSTNUMBERS_LOCATION'	=> $this->location,
-		);
+		];
 
 		if ($this->location === 'post_img')
 		{
 			$this->user->add_lang_ext('kasimi/postnumbers', 'common');
 
-			$template_data = array_merge($template_data, array(
+			$template_data = array_merge($template_data, [
 				'S_POSTNUMBERS_CLIPBOARD'		=> $this->cfg('clipboard'),
 				'S_POSTNUMBERS_BOLD'			=> $this->cfg('bold'),
 				'S_POSTNUMBERS_QUICKEDIT'		=> $this->ext_manager->is_enabled('marc/quickedit'),
 				'POSTNUMBERS_PHPBB_VERSION'		=> phpbb_version_compare(PHPBB_VERSION, '3.1.0@dev', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.2.0@dev', '<') ? '31x' : (phpbb_version_compare(PHPBB_VERSION, '3.2.0@dev', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.3.0@dev', '<') ? '32x' : ''),
-			));
+			]);
 		}
 
 		$this->template->assign_vars($template_data);
@@ -358,10 +358,10 @@ class listener implements EventSubscriberInterface
 	 */
 	protected function get_post_count($topic_id, $post_time)
 	{
-		$sql_where = array(
+		$sql_where = [
 			'p.topic_id = ' . (int) $topic_id,
 			'p.post_time < ' . (int) $post_time,
-		);
+		];
 
 		if ($this->cfg('skip_nonapproved'))
 		{

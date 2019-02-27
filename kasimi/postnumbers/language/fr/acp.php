@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_ENABLED_VIEWTOPIC'			=> 'Afficher les numéros des messages lors de la consultation d’un sujet',
 	'POSTNUMBERS_ENABLED_REVIEW_REPLY'		=> 'Afficher les numéros des messages lors de la publication d’une réponse (message) dans la « Revue du sujet »',
 	'POSTNUMBERS_ENABLED_REVIEW_MCP'		=> 'Afficher les numéros des messages dans la « Revue du sujet » depuis le « Panneau de modération »',
@@ -53,4 +53,4 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Permet de copier le lien du message lors de clic sur son numéro. Utile uniquement, si l’option « Emplacement des numéros des messages » est sélectionnée sur : « Avant l’image du message et du nom de l’auteur ». Fonctionnalité disponible uniquement depuis les navigateurs récents, tels que : Chrome 43, Firefox 41, IE 9, Opera 29 et Safari 10. Sous les navigateurs non pris en charge, une fenêtre contenant le lien du message sera affichée en lieu et place.',
 	'POSTNUMBERS_BOLD'						=> 'Afficher les numéros/ID des messages en gras',
 	'POSTNUMBERS_BOLD_EXP'					=> 'Permet d’afficher les numéros et ID des messages avec une police de caractères en gras. Utile uniquement, si l’option « Emplacement des numéros des messages » est sélectionnée sur : « Avant l’image du message et du nom de l’auteur ».',
-));
+]);

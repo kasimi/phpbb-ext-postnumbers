@@ -15,11 +15,11 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_COPY_TITLE'		=> 'Copiar link da mensagem para a área de transferência',
 	'POSTNUMBERS_COPY_MANUALLY'		=> 'Copiar para a área de transferência: Ctrl/Cmd+C, Enter',
 	'POSTNUMBERS_COPIED'			=> 'Copiado!',
-));
+]);

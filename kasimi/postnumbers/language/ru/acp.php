@@ -16,10 +16,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_ENABLED_VIEWTOPIC'			=> 'Показать количество сообщений при просмотре темы',
 	'POSTNUMBERS_ENABLED_REVIEW_REPLY'		=> 'Показать количество сообщений при написании ответа',
 	'POSTNUMBERS_ENABLED_REVIEW_MCP'		=> 'Показать количество сообщений в MCP',
@@ -34,4 +34,4 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Только если номера сообщений отображаются между изображением и после имени автора сообщения. Работает только в современных браузерах, не менее: Chrome 43, Firefox 41, IE 9, Opera 29, Safari 10. Неподдерживаемые браузеры отображают подсказку, содержащую ссылку на сообщению вместо этого.',
 	'POSTNUMBERS_BOLD'						=> 'Сделайть номер сообщения / IDs выделенными жирным шрифтом',
 	'POSTNUMBERS_BOLD_EXP'					=> 'Только если номера сообщений отображаются между изображением и после имени автора сообщения',
-));
+]);

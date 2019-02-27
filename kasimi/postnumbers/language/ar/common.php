@@ -16,11 +16,11 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_COPY_TITLE'		=> 'نسخ رابط المُشاركة إلى الحافظة',
 	'POSTNUMBERS_COPY_MANUALLY'		=> 'النسخ إلى الحافظة : Ctrl/Cmd+C, Enter',
 	'POSTNUMBERS_COPIED'			=> 'تم النسخ !',
-));
+]);

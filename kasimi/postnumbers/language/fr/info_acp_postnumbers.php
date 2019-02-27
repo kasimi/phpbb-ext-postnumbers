@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_TITLE'						=> 'Numéros des messages',
 	'POSTNUMBERS_CONFIG'					=> 'Paramètres',
 	'POSTNUMBERS_CONFIG_UPDATED'			=> 'Extension <strong>« Numéros des messages »</strong><br />» Paramètres mise à jour',
-));
+]);

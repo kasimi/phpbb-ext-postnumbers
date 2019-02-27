@@ -15,10 +15,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_ENABLED_VIEWTOPIC'			=> 'Mostrar números de mensajes cuando estemos viendo un tema',
 	'POSTNUMBERS_ENABLED_REVIEW_REPLY'		=> 'Mostrar números de mensajes en la vista previa del tema cuando se esta escribiendo una respuesta',
 	'POSTNUMBERS_ENABLED_REVIEW_MCP'		=> 'Mostrar números de mensajes en la vista previa del PCM',
@@ -33,4 +33,4 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Solamente es válido si la numeración es mostrada entre la imagen y el nombre del autor. Solo funciona en navegadores modernos: Chrome 43, Firefox 41, IE 9, Opera 29, Safari 10. Navegadores no soportados muestran un prompt conteniendo un enlace.',
 	'POSTNUMBERS_BOLD'						=> 'Muestra la numeración/IDs en negritas',
 	'POSTNUMBERS_BOLD_EXP'					=> 'Solamente es válido si la numeración es mostrada entre la imagen y el nombre del autor.',
-));
+]);

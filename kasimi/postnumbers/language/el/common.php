@@ -17,11 +17,11 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_COPY_TITLE'		=> 'Αντιγραφή συνδέσμου δημοσίευσης στο πρόχειρο',
 	'POSTNUMBERS_COPY_MANUALLY'		=> 'Αντιγραφή στο πρόχειρο: Ctrl/Cmd+C, Enter',
 	'POSTNUMBERS_COPIED'			=> 'Αντιγράφηκε!',
-));
+]);

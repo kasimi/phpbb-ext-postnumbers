@@ -7,7 +7,7 @@
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
- 
+
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -15,10 +15,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_ENABLED_VIEWTOPIC'			=> 'Mostra a numeração das mensagens aquando se visualiza tópicos',
 	'POSTNUMBERS_ENABLED_REVIEW_REPLY'		=> 'Mostra a numeração das mensagens na revisão do tópico aquando se responde',
 	'POSTNUMBERS_ENABLED_REVIEW_MCP'		=> 'Mostra a numeração de mensagens aquando na revisão do tópico no MCP',
@@ -33,4 +33,4 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Apenas é válido se a numeração é exibida entre a imagem e o nome do autor. Só funciona em navegadores modernos: Chrome 43, Firefox 41, IE 9, Opera 29, Safari 10. Navegadores não suportados mostram um prompt contendo um link.',
 	'POSTNUMBERS_BOLD'						=> 'Exibe a numeração/IDs em negrito',
 	'POSTNUMBERS_BOLD_EXP'					=> 'Apenas é válido se a numeração é exibida entre a imagem e o nome do autor.',
-));
+]);

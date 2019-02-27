@@ -15,10 +15,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_ENABLED_VIEWTOPIC'			=> 'Show post numbers when viewing topics',
 	'POSTNUMBERS_ENABLED_REVIEW_REPLY'		=> 'Show post numbers in topic review when composing a reply',
 	'POSTNUMBERS_ENABLED_REVIEW_MCP'		=> 'Show post numbers in MCP topic review',
@@ -33,4 +33,4 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Only relevant if post numbers are displayed before post image and post author name. Only works in modern browsers, at least: Chrome 43, Firefox 41, IE 9, Opera 29, Safari 10. Unsupported browsers display a prompt containing the post link instead.',
 	'POSTNUMBERS_BOLD'						=> 'Make post numbers/IDs bold',
 	'POSTNUMBERS_BOLD_EXP'					=> 'Only relevant if post numbers are displayed before post image and post author name.',
-));
+]);

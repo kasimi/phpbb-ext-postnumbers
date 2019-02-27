@@ -17,11 +17,11 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_TITLE'						=> 'Αριθμός Δημοσίευσης',
 	'POSTNUMBERS_CONFIG'					=> 'Ρυθμίσεις',
 	'POSTNUMBERS_CONFIG_UPDATED'			=> 'Επέκταση <strong>Αριθμός Δημοσίευσης</strong><br />» Οι νέες ρυθμίσεις ενημερώθηκαν',
-));
+]);

@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_COPY_TITLE'		=> 'Copier le lien du message dans le presse-papier',
 	'POSTNUMBERS_COPY_MANUALLY'		=> 'Copier manuellement le lien vers le presse-papier : Combinaison des touches Ctrl (Cmd sous Mac) + C, puis coller l’adresse dans la barre d’adresse du navigateur (combinaison des touches Ctrl / Cmd sous Mac + V) puis de la touche Enter',
 	'POSTNUMBERS_COPIED'			=> 'Lien copié !',
-));
+]);

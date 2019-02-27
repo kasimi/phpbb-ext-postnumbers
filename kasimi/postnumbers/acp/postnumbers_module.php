@@ -14,7 +14,7 @@ class postnumbers_module
 {
 	public $u_action;
 
-	private $config_keys = array(
+	private $config_keys = [
 		'enabled.viewtopic',
 		'enabled.review_reply',
 		'enabled.review_mcp',
@@ -23,7 +23,7 @@ class postnumbers_module
 		'location',
 		'clipboard',
 		'bold',
-	);
+	];
 
 	function main($id, $mode)
 	{
@@ -56,9 +56,9 @@ class postnumbers_module
 			trigger_error($user->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 
-		$template_data = array(
+		$template_data = [
 			'U_ACTION' => $this->u_action,
-		);
+		];
 
 		foreach ($this->config_keys as $config_key)
 		{

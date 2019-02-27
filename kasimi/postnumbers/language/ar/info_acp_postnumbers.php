@@ -16,11 +16,11 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_TITLE'						=> 'أرقام المُشاركات',
 	'POSTNUMBERS_CONFIG'					=> 'الإعدادات',
 	'POSTNUMBERS_CONFIG_UPDATED'			=> 'الإضافة : <strong>أرقام المُشاركات </strong><br />» تم تحديث الإعدادات',
-));
+]);

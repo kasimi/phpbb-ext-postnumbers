@@ -15,10 +15,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'POSTNUMBERS_ENABLED_VIEWTOPIC'			=> 'Pokaż numerację postów podczas wyświetlania tematów',
 	'POSTNUMBERS_ENABLED_REVIEW_REPLY'		=> 'Pokaż numerację postów (w przeglądzie tematu) podczas pisania odpowiedzi',
 	'POSTNUMBERS_ENABLED_REVIEW_MCP'		=> 'Pokaż numerację postów w Panelu Moderacji',
@@ -33,4 +33,4 @@ $lang = array_merge($lang, array(
 	'POSTNUMBERS_CLIPBOARD_EXP'				=> 'Opcja ma znaczenie tylko wtedy, gdy numeracja postu znajduje się przed ikoną postu i nazwą użytkownika autora postu. Działa wyłącznie z nowoczesnymi przeglądarkami, w wersjach co najmniej: Chrome 43, Firefox 41, Internet Explorer 9, Opera 29, Safari 10. W niewspieranych przeglądarkach będzie wyświetlany komunikat z linkiem do postu, zamiast akcji kopiowania.',
 	'POSTNUMBERS_BOLD'						=> 'Wyświetlaj numerację postów/globalne ID pogrubioną czcionką',
 	'POSTNUMBERS_BOLD_EXP'					=> 'Opcja ma znaczenie tylko wtedy, gdy gdy numeracja postu znajduje się przed ikoną postu i nazwą użytkownika autora postu.',
-));
+]);
