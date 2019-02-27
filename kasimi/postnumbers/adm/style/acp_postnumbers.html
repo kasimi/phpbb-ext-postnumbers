@@ -1,79 +1,79 @@
-<!-- INCLUDE overall_header.html -->
+{% INCLUDE 'overall_header.html' %}
 
-<h1>{L_POSTNUMBERS_TITLE}</h1>
+<h1>{{ lang('POSTNUMBERS_TITLE') }}</h1>
 
-<form id="acp_board" method="post" action="{U_ACTION}">
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
 	<fieldset>
 		<dl>
-			<dt><label for="postnumbers_enabled_viewtopic">{L_POSTNUMBERS_ENABLED_VIEWTOPIC}{L_COLON}</label></dt>
+			<dt><label for="postnumbers_enabled_viewtopic">{{ lang('POSTNUMBERS_ENABLED_VIEWTOPIC') ~ lang('COLON') }}</label></dt>
 			<dd>
-				<label><input type="radio" class="radio" name="postnumbers_enabled_viewtopic" value="1" id="postnumbers_enabled_viewtopic"<!-- IF POSTNUMBERS_ENABLED_VIEWTOPIC --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
-				<label><input type="radio" class="radio" name="postnumbers_enabled_viewtopic" value="0"<!-- IF not POSTNUMBERS_ENABLED_VIEWTOPIC --> checked="checked"<!-- ENDIF -->> {L_NO}</label>
+				<label><input type="radio" class="radio" name="postnumbers_enabled_viewtopic" value="1" id="postnumbers_enabled_viewtopic"{{ POSTNUMBERS_ENABLED_VIEWTOPIC ? ' checked' }}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="postnumbers_enabled_viewtopic" value="0"{{ not POSTNUMBERS_ENABLED_VIEWTOPIC ? ' checked' }}> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="postnumbers_enabled_review_reply">{L_POSTNUMBERS_ENABLED_REVIEW_REPLY}{L_COLON}</label></dt>
+			<dt><label for="postnumbers_enabled_review_reply">{{ lang('POSTNUMBERS_ENABLED_REVIEW_REPLY') ~ lang('COLON') }}</label></dt>
 			<dd>
-				<label><input type="radio" class="radio" name="postnumbers_enabled_review_reply" value="1" id="postnumbers_enabled_review_reply"<!-- IF POSTNUMBERS_ENABLED_REVIEW_REPLY --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
-				<label><input type="radio" class="radio" name="postnumbers_enabled_review_reply" value="0"<!-- IF not POSTNUMBERS_ENABLED_REVIEW_REPLY --> checked="checked"<!-- ENDIF -->> {L_NO}</label>
+				<label><input type="radio" class="radio" name="postnumbers_enabled_review_reply" value="1" id="postnumbers_enabled_review_reply"{{ POSTNUMBERS_ENABLED_REVIEW_REPLY ? ' checked' }}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="postnumbers_enabled_review_reply" value="0"{{ not POSTNUMBERS_ENABLED_REVIEW_REPLY ? ' checked' }}> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="postnumbers_enabled_review_mcp">{L_POSTNUMBERS_ENABLED_REVIEW_MCP}{L_COLON}</label></dt>
+			<dt><label for="postnumbers_enabled_review_mcp">{{ lang('POSTNUMBERS_ENABLED_REVIEW_MCP') ~ lang('COLON') }}</label></dt>
 			<dd>
-				<label><input type="radio" class="radio" name="postnumbers_enabled_review_mcp" value="1" id="postnumbers_enabled_review_mcp"<!-- IF POSTNUMBERS_ENABLED_REVIEW_MCP --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
-				<label><input type="radio" class="radio" name="postnumbers_enabled_review_mcp" value="0"<!-- IF not POSTNUMBERS_ENABLED_REVIEW_MCP --> checked="checked"<!-- ENDIF -->> {L_NO}</label>
-			</dd>
-		</dl>
-		<hr>
-		<dl>
-			<dt><label for="postnumbers_skip_nonapproved">{L_POSTNUMBERS_SKIP_NONAPPROVED}{L_COLON}</label><br><span>{L_POSTNUMBERS_SKIP_NONAPPROVED_EXP}</span></dt>
-			<dd>
-				<label><input type="radio" class="radio" name="postnumbers_skip_nonapproved" value="1" id="postnumbers_skip_nonapproved"<!-- IF POSTNUMBERS_SKIP_NONAPPROVED --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
-				<label><input type="radio" class="radio" name="postnumbers_skip_nonapproved" value="0"<!-- IF not POSTNUMBERS_SKIP_NONAPPROVED --> checked="checked"<!-- ENDIF -->> {L_NO}</label>
-			</dd>
-		</dl>
-		<dl>
-			<dt><label for="postnumbers_display_ids">{L_POSTNUMBERS_DISPLAY_IDS}{L_COLON}</label><br><span>{L_POSTNUMBERS_DISPLAY_IDS_EXP}</span></dt>
-			<dd>
-				<label><input type="radio" class="radio" name="postnumbers_display_ids" value="1" id="postnumbers_display_ids"<!-- IF POSTNUMBERS_DISPLAY_IDS --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
-				<label><input type="radio" class="radio" name="postnumbers_display_ids" value="0"<!-- IF not POSTNUMBERS_DISPLAY_IDS --> checked="checked"<!-- ENDIF -->> {L_NO}</label>
+				<label><input type="radio" class="radio" name="postnumbers_enabled_review_mcp" value="1" id="postnumbers_enabled_review_mcp"{{ POSTNUMBERS_ENABLED_REVIEW_MCP ? ' checked' }}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="postnumbers_enabled_review_mcp" value="0"{{ not POSTNUMBERS_ENABLED_REVIEW_MCP ? ' checked' }}> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<hr>
 		<dl>
-			<dt><label>{L_POSTNUMBERS_LOCATION}{L_COLON}</label></dt>
+			<dt><label for="postnumbers_skip_nonapproved">{{ lang('POSTNUMBERS_SKIP_NONAPPROVED') ~ lang('COLON') }}</label><br><span>{{ lang('POSTNUMBERS_SKIP_NONAPPROVED_EXP') }}</span></dt>
 			<dd>
-				<select name="postnumbers_location">
-					<option value="0"<!-- IF POSTNUMBERS_LOCATION == 0 --> selected<!-- ENDIF -->>{L_POSTNUMBERS_LOCATION_AUTHOR}</option>
-					<option value="1"<!-- IF POSTNUMBERS_LOCATION == 1 --> selected<!-- ENDIF -->>{L_POSTNUMBERS_LOCATION_BEFORE_SUBJECT}</option>
-					<option value="2"<!-- IF POSTNUMBERS_LOCATION == 2 --> selected<!-- ENDIF -->>{L_POSTNUMBERS_LOCATION_SUBJECT}</option>
+				<label><input type="radio" class="radio" name="postnumbers_skip_nonapproved" value="1" id="postnumbers_skip_nonapproved"{{ POSTNUMBERS_SKIP_NONAPPROVED ? ' checked' }}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="postnumbers_skip_nonapproved" value="0"{{ not POSTNUMBERS_SKIP_NONAPPROVED ? ' checked' }}> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="postnumbers_display_ids">{{ lang('POSTNUMBERS_DISPLAY_IDS') ~ lang('COLON') }}</label><br><span>{{ lang('POSTNUMBERS_DISPLAY_IDS_EXP') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="postnumbers_display_ids" value="1" id="postnumbers_display_ids"{{ POSTNUMBERS_DISPLAY_IDS ? ' checked' }}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="postnumbers_display_ids" value="0"{{ not POSTNUMBERS_DISPLAY_IDS ? ' checked' }}> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<hr>
+		<dl>
+			<dt><label for="postnumbers_location">{{ lang('POSTNUMBERS_LOCATION') ~ lang('COLON') }}</label></dt>
+			<dd>
+				<select id="postnumbers_location" name="postnumbers_location">
+					<option value="0"{% if POSTNUMBERS_LOCATION == 0 %} selected{% endif %}>{{ lang('POSTNUMBERS_LOCATION_AUTHOR') }}</option>
+					<option value="1"{% if POSTNUMBERS_LOCATION == 1 %} selected{% endif %}>{{ lang('POSTNUMBERS_LOCATION_BEFORE_SUBJECT') }}</option>
+					<option value="2"{% if POSTNUMBERS_LOCATION == 2 %} selected{% endif %}>{{ lang('POSTNUMBERS_LOCATION_SUBJECT') }}</option>
 				</select>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="postnumbers_clipboard">{L_POSTNUMBERS_CLIPBOARD}{L_COLON}</label><br><span>{L_POSTNUMBERS_CLIPBOARD_EXP}</span></dt>
+			<dt><label for="postnumbers_clipboard">{{ lang('POSTNUMBERS_CLIPBOARD') ~ lang('COLON') }}</label><br><span>{{ lang('POSTNUMBERS_CLIPBOARD_EXP') }}</span></dt>
 			<dd>
-				<label><input type="radio" class="radio" name="postnumbers_clipboard" value="1" id="postnumbers_clipboard"<!-- IF POSTNUMBERS_CLIPBOARD --> checked="checked"<!-- ENDIF -->/> {L_YES}</label>
-				<label><input type="radio" class="radio" name="postnumbers_clipboard" value="0"<!-- IF not POSTNUMBERS_CLIPBOARD --> checked="checked"<!-- ENDIF -->> {L_NO}</label>
+				<label><input type="radio" class="radio" name="postnumbers_clipboard" value="1" id="postnumbers_clipboard"{{ POSTNUMBERS_CLIPBOARD ? ' checked' }}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="postnumbers_clipboard" value="0"{{ not POSTNUMBERS_CLIPBOARD ? ' checked' }}> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="postnumbers_bold">{L_POSTNUMBERS_BOLD}{L_COLON}</label><br><span>{L_POSTNUMBERS_BOLD_EXP}</span></dt>
+			<dt><label for="postnumbers_bold">{{ lang('POSTNUMBERS_BOLD') ~ lang('COLON') }}</label><br><span>{{ lang('POSTNUMBERS_BOLD_EXP') }}</span></dt>
 			<dd>
-				<label><input type="radio" class="radio" name="postnumbers_bold" value="1" id="postnumbers_bold"<!-- IF POSTNUMBERS_BOLD --> checked="checked"<!-- ENDIF -->> {L_YES}</label>
-				<label><input type="radio" class="radio" name="postnumbers_bold" value="0"<!-- IF not POSTNUMBERS_BOLD --> checked="checked"<!-- ENDIF -->> {L_NO}</label>
+				<label><input type="radio" class="radio" name="postnumbers_bold" value="1" id="postnumbers_bold"{{ POSTNUMBERS_BOLD ? ' checked' }}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="postnumbers_bold" value="0"{{ not POSTNUMBERS_BOLD ? ' checked' }}> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 	</fieldset>
 	<fieldset>
-		<legend>{L_ACP_SUBMIT_CHANGES}</legend>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
 		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}">&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
 		</p>
-		{S_FORM_TOKEN}
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}
