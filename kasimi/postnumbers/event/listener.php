@@ -133,7 +133,11 @@ class listener implements EventSubscriberInterface
 		switch ($this->cfg('location'))
 		{
 			case 1:
-				$this->location = 'subject';
+				$this->location = 'before_subject';
+			break;
+
+			case 2:
+				$this->location = 'replace_subject';
 			break;
 
 			default:
@@ -348,9 +352,13 @@ class listener implements EventSubscriberInterface
 	{
 		$post_row['POSTNUMBER'] = $post_num;
 
-		if ($this->location === 'subject')
+		if ($this->location === 'before_subject')
 		{
 			$post_row['POST_SUBJECT'] = '#' . $post_num . ' ' . $post_row['POST_SUBJECT'];
+		}
+		else if ($this->location === 'replace_subject')
+		{
+			$post_row['POST_SUBJECT'] = '#' . $post_num;
 		}
 
 		return $post_row;
