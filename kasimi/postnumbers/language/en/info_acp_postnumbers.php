@@ -21,5 +21,5 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'POSTNUMBERS_TITLE'						=> 'Post Numbers',
 	'POSTNUMBERS_CONFIG'					=> 'Configuration',
-	'POSTNUMBERS_CONFIG_UPDATED'			=> '<strong>Post Numbers</strong>Extension<br>» Configuration updated',
+	'POSTNUMBERS_CONFIG_UPDATED'			=> '<strong>Post Numbers</strong> Extension<br>» Configuration updated',
 ]);
