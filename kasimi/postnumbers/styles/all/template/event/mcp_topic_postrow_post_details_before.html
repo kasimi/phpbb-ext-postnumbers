@@ -1,5 +1,5 @@
 {% if S_POSTNUMBERS_LOCATION == 'post_img' and postrow.POSTNUMBER %}
-	{% set U_POST = postrow.U_MINI_POST ~ '#pr' ~ postrow.POST_ID %}
+	{% set U_POST = '#pr' ~ postrow.POST_ID %}
 	{% set POST_NUMBER = postrow.POSTNUMBER %}
 	{% include '@kasimi_postnumbers/post_number.html' %}
 {% endif %}
